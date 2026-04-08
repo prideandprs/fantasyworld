@@ -687,6 +687,44 @@ select {
   border-color: rgba(0,0,0,0.3);
 }
 
+.check-group-label {
+  width: 100%; font-size: 12px; font-weight: 600;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-top: 4px;
+}
+
+/* ─── Tag Picker ─── */
+.tag-picker-selected { display: flex; flex-wrap: wrap; gap: 8px; min-height: 20px; margin-bottom: 4px; }
+.tag-picker-selected:empty { display: none; }
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; background: rgba(8,105,216,0.08);
+  border: 1.5px solid var(--accent-blue); border-radius: 20px;
+  font-size: 13px; font-weight: 500; color: var(--accent-blue);
+}
+.tag-chip .tag-remove { cursor: pointer; font-size: 16px; line-height: 1; opacity: 0.7; }
+.tag-chip .tag-remove:hover { opacity: 1; }
+.tag-picker-dropdown {
+  margin-top: 8px; border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 12px; max-height: 220px; overflow-y: auto; background: #fff;
+}
+.tag-picker-search {
+  width: 100%; padding: 12px 16px; border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 14px;
+  outline: none; border-radius: 12px 12px 0 0; box-sizing: border-box;
+}
+.tag-picker-option {
+  padding: 10px 16px; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+}
+.tag-picker-option:hover { background: var(--bg-secondary); }
+.tag-picker-option.selected { color: var(--accent-blue); font-weight: 600; }
+.tag-picker-option.selected::before { content: '\2713'; }
+.tag-picker-group {
+  padding: 8px 16px 4px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);
+}
+
 /* ─── Form Row ─── */
 .form-row {
   display: grid;
@@ -792,13 +830,63 @@ select {
   padding: 14px 20px;
   border-radius: 12px;
   font-size: 14px; font-weight: 500;
+  margin-top: 16px;
   margin-bottom: 20px;
   display: none;
 }
 
-.alert.show { display: flex; align-items: center; gap: 8px; }
+.alert.show { display: flex; align-items: center; gap: 10px; }
+.alert .alert-lines { display: flex; flex-direction: column; gap: 2px; }
 .alert-success { background: rgba(15,172,116,0.1); color: #0a7a52; }
 .alert-error { background: rgba(245,9,76,0.1); color: #c4073d; }
+
+/* ─── Success Page ─── */
+.success-container { animation: successFadeIn 0.6s ease-out; }
+
+@keyframes successFadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.success-icon-wrap {
+  display: flex; justify-content: center; margin-bottom: 28px;
+}
+
+.success-icon {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, var(--accent-blue), #4a9eff);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: #fff; font-weight: 700;
+  animation: successPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+  box-shadow: 0 8px 32px rgba(8,105,216,0.25);
+}
+
+@keyframes successPop {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-headline {
+  font-size: 36px; font-weight: 800; letter-spacing: -1.5px;
+  margin-bottom: 12px;
+  animation: successFadeIn 0.5s ease-out 0.4s both;
+}
+
+.success-subline {
+  color: var(--text-muted); font-size: 18px; line-height: 1.6;
+  max-width: 480px; margin: 0 auto 32px;
+  animation: successFadeIn 0.5s ease-out 0.55s both;
+}
+
+.success-next {
+  background: var(--bg-secondary); border-radius: 16px;
+  padding: 20px 24px; max-width: 480px; margin: 0 auto 32px;
+  animation: successFadeIn 0.5s ease-out 0.7s both;
+}
+
+.success-next p { font-size: 14px; color: var(--text-muted); margin: 0; }
+.success-next .success-email { margin-top: 8px; font-size: 13px; }
 
 /* ─── Loading State ─── */
 .spinner {
@@ -827,6 +915,36 @@ select {
 }
 
 /* ─── Privacy Section in Form ─── */
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.consent-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+.consent-row label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.consent-row.has-error {
+  border: 1.5px solid var(--error);
+}
+
 .privacy-note {
   background: var(--bg-secondary);
   border-radius: 12px;
@@ -888,7 +1006,6 @@ select {
   </a>
   <div class="nav-links" id="navLinks">
     <button class="nav-link" onclick="showView('landing')"><span class="nav-link-text">Startseite</span></button>
-    <button class="nav-link" onclick="showView('register')"><span class="nav-link-text">Anmelden</span></button>
     <button class="btn btn-primary btn-sm" onclick="showView('register')">Dabei sein</button>
   </div>
 </nav>
@@ -1191,7 +1308,7 @@ select {
         </div>
 
         <div class="form-section">
-          <div class="form-section-title">Herkunft</div>
+          <div class="form-section-title">Wie hast du uns gefunden?</div>
           <div class="form-group">
             <label>Wie bist du auf das Lead User Panel aufmerksam geworden?</label>
             <select name="referral_source">
@@ -1207,6 +1324,7 @@ select {
           </div>
         </div>
 
+        <div id="alertStep1" class="alert"></div>
         <div class="form-nav">
           <div></div>
           <button type="button" class="btn btn-primary" onclick="nextStep(2)">Weiter &rarr;</button>
@@ -1286,24 +1404,35 @@ select {
 
           <div class="form-group">
             <label>Lebenssituation (Mehrfachauswahl möglich)</label>
-            <div class="check-group">
-              <div class="check-item">
-                <input type="checkbox" name="life_situation" id="ls-alone" value="alleinlebend">
-                <label for="ls-alone">Alleinlebend</label>
-              </div>
-              <div class="check-item">
-                <input type="checkbox" name="life_situation" id="ls-kids" value="kinder">
-                <label for="ls-kids">Mit Kindern</label>
-              </div>
-              <div class="check-item">
-                <input type="checkbox" name="life_situation" id="ls-commuter" value="pendler">
-                <label for="ls-commuter">Pendler:in</label>
-              </div>
-              <div class="check-item">
-                <input type="checkbox" name="life_situation" id="ls-student" value="student">
-                <label for="ls-student">Student:in</label>
+            <div class="tag-picker-wrap">
+              <div class="tag-picker-selected" id="ls-selected"></div>
+              <div class="tag-picker-dropdown">
+                <input type="text" class="tag-picker-search" placeholder="Suchen..." oninput="filterLifeTags(this.value)">
+                <div id="ls-options">
+                  <div class="tag-picker-group">Wohnsituation</div>
+                  <div class="tag-picker-option" data-value="alleinlebend" onclick="toggleLifeTag(this)">Alleinlebend</div>
+                  <div class="tag-picker-option" data-value="partnerschaft" onclick="toggleLifeTag(this)">In Partnerschaft / WG</div>
+                  <div class="tag-picker-option" data-value="kinder" onclick="toggleLifeTag(this)">Mit Kindern</div>
+                  <div class="tag-picker-group">Mobilität &amp; Alltag</div>
+                  <div class="tag-picker-option" data-value="pendler" onclick="toggleLifeTag(this)">Pendler:in</div>
+                  <div class="tag-picker-option" data-value="nachtleben" onclick="toggleLifeTag(this)">Abends/nachts unterwegs</div>
+                  <div class="tag-picker-option" data-value="reisen" onclick="toggleLifeTag(this)">Viel auf Reisen</div>
+                  <div class="tag-picker-option" data-value="sport_outdoor" onclick="toggleLifeTag(this)">Sport / Outdoor</div>
+                  <div class="tag-picker-option" data-value="haustier" onclick="toggleLifeTag(this)">Mit Haustier</div>
+                  <div class="tag-picker-group">Lebensphase</div>
+                  <div class="tag-picker-option" data-value="student" onclick="toggleLifeTag(this)">Student:in</div>
+                  <div class="tag-picker-option" data-value="schichtdienst" onclick="toggleLifeTag(this)">Schichtdienst</div>
+                  <div class="tag-picker-option" data-value="ruhestand" onclick="toggleLifeTag(this)">Im Ruhestand</div>
+                  <div class="tag-picker-group">Gesundheit &amp; Zugänglichkeit</div>
+                  <div class="tag-picker-option" data-value="mobilitaetseinschraenkung" onclick="toggleLifeTag(this)">Mobilitätseinschränkung</div>
+                  <div class="tag-picker-option" data-value="seheinschraenkung" onclick="toggleLifeTag(this)">Seheinschränkung</div>
+                  <div class="tag-picker-option" data-value="hoereinschraenkung" onclick="toggleLifeTag(this)">Höreinschränkung</div>
+                  <div class="tag-picker-option" data-value="chronische_erkrankung" onclick="toggleLifeTag(this)">Chronische Erkrankung</div>
+                  <div class="tag-picker-option" data-value="psychische_belastung" onclick="toggleLifeTag(this)">Psychische Belastung</div>
+                </div>
               </div>
             </div>
+            <input type="text" name="life_situation_other" placeholder="Was noch? (optional)" style="margin-top:12px;">
           </div>
 
           <div class="form-group">
@@ -1324,6 +1453,7 @@ select {
           </div>
         </div>
 
+        <div id="alertStep2" class="alert"></div>
         <div class="form-nav">
           <button type="button" class="btn btn-outline" onclick="prevStep(1)">&larr; Zurück</button>
           <button type="button" class="btn btn-primary" onclick="nextStep(3)">Weiter &rarr;</button>
@@ -1371,9 +1501,9 @@ select {
             <select name="time_commitment">
               <option value="">Bitte wählen</option>
               <option value="15min">Bis 15 Minuten</option>
-              <option value="30min">Bis 30 Minuten</option>
-              <option value="1h">Bis 1 Stunde</option>
-              <option value="2h+">Mehr als 1 Stunde</option>
+              <option value="1h">15 Minuten bis 1 Stunde</option>
+              <option value="3h">1 bis 3 Stunden</option>
+              <option value="3h+">Mehr als 3 Stunden</option>
             </select>
           </div>
 
@@ -1398,17 +1528,16 @@ select {
         </div>
 
         <!-- Privacy & Consent -->
-        <div class="form-group">
-          <div class="check-item">
-            <input type="checkbox" name="consent" id="consent" required>
-            <label for="consent" style="font-size:13px;">Ich bin einverstanden, dass SafeNow meine Daten speichert und mich für Research-Studien kontaktiert. <span class="required">*</span></label>
-          </div>
+        <div class="consent-row" id="consentRow" onclick="document.getElementById('consent').click()">
+          <input type="checkbox" name="consent" id="consent" required onclick="event.stopPropagation()">
+          <label for="consent" onclick="event.stopPropagation()">
+            Ich bin einverstanden, dass SafeNow meine Daten speichert und mich für Research-Studien kontaktiert. <span class="required">*</span>
+            <br><br>
+            <span style="color:var(--text-muted);">Wir behandeln deine Daten so, wie wir es uns für unsere eigenen wünschen: vertraulich und respektvoll. Deine Daten werden nur für das Panel verwendet. Du kannst sie jederzeit ändern oder komplett löschen. Mehr dazu in unserer <a href="#">Datenschutzerklärung</a>.</span>
+          </label>
         </div>
 
-        <div class="privacy-note">
-          Wir behandeln deine Daten so, wie wir es uns für unsere eigenen wünschen: vertraulich und respektvoll. Deine Daten werden nur für das Panel verwendet. Du kannst sie jederzeit ändern oder komplett löschen. Mehr dazu in unserer <a href="#">Datenschutzerklärung</a>.
-        </div>
-
+        <div id="alertStep3" class="alert"></div>
         <div class="form-nav">
           <button type="button" class="btn btn-outline" onclick="prevStep(2)">&larr; Zurück</button>
           <button type="submit" class="btn btn-dark btn-lg" id="submitBtn">
@@ -1426,15 +1555,18 @@ select {
      SUCCESS VIEW
      ═══════════════════════════════════════════════ -->
 <div id="view-success" class="view">
-  <div class="form-container" style="text-align:center;padding-top:200px;">
-    <div style="font-size:64px;margin-bottom:24px;">&#129309;</div>
-    <h1 style="font-size:36px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;">Du bist dabei!</h1>
-    <p style="color:var(--text-muted);font-size:18px;max-width:480px;margin:0 auto 16px;">Willkommen in der SafeNow Community. Schön, dass du dabei bist. Zusammen machen wir SafeNow zu der App, die wirklich hilft.</p>
-    <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Was passiert jetzt? Wir schreiben dir eine E-Mail, sobald eine Studie zu deinem Profil passt.</p>
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:32px;">Bestätigung geht an <strong id="confirmEmail"></strong></p>
+  <div class="form-container success-container" style="text-align:center;padding-top:160px;">
+    <div class="success-icon-wrap">
+      <div class="success-icon">&#10003;</div>
+    </div>
+    <h1 class="success-headline">Willkommen, <span id="confirmName">du</span>!</h1>
+    <p class="success-subline">Du bist jetzt Teil der SafeNow Community.<br>Richtig gut, dass du dabei bist.</p>
+    <div class="success-next">
+      <p>Sobald eine Studie zu deinem Profil passt, melden wir uns per E-Mail bei dir.</p>
+      <p class="success-email">Bestätigung geht an <strong id="confirmEmail"></strong></p>
+    </div>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="showView('profile')">Mein Profil ansehen</button>
-      <button class="btn btn-outline" onclick="showView('landing')">Zur Startseite</button>
+      <button class="btn btn-primary" onclick="showView('landing')">Zur Startseite</button>
     </div>
   </div>
 </div>
@@ -1510,16 +1642,13 @@ function showView(viewName) {
 
   // Update nav
   const links = document.getElementById('navLinks');
-  if (viewName === 'profile' || viewName === 'success') {
+  if (viewName === 'success') {
     links.innerHTML = `
       <button class="nav-link" onclick="showView('landing')">Startseite</button>
-      <button class="nav-link" onclick="showView('profile')">Mein Profil</button>
-      <button class="btn btn-outline btn-sm" onclick="logout()">Abmelden</button>
     `;
   } else {
     links.innerHTML = `
       <button class="nav-link" onclick="showView('landing')"><span class="nav-link-text">Startseite</span></button>
-      <button class="nav-link" onclick="showView('login')"><span class="nav-link-text">Mein Profil</span></button>
       <button class="btn btn-primary btn-sm" onclick="showView('register')">Dabei sein</button>
     `;
   }
@@ -1529,33 +1658,41 @@ function showView(viewName) {
 let currentStep = 1;
 
 function nextStep(step) {
-  // Validate current step
+  const alertId = 'alertStep' + currentStep;
+  const errors = [];
+
+  // Validate required fields
   const currentFields = document.querySelectorAll(`#form-step-${currentStep} [required]`);
-  let valid = true;
+  const missingFields = [];
   currentFields.forEach(f => {
     if (!f.value || (f.type === 'checkbox' && !f.checked)) {
       f.style.borderColor = 'var(--error)';
-      valid = false;
+      const label = f.closest('.form-group')?.querySelector('label');
+      if (label) missingFields.push(label.textContent.replace('*', '').trim());
     } else {
       f.style.borderColor = '';
     }
   });
+
+  if (missingFields.length > 0) {
+    errors.push('Bitte fülle aus: ' + missingFields.join(', '));
+  }
 
   // For step 1, validate email format
   if (currentStep === 1) {
     const email = document.querySelector('[name="email"]');
     if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
       email.style.borderColor = 'var(--error)';
-      valid = false;
+      errors.push('Bitte gib eine gültige E-Mail-Adresse ein.');
     }
   }
 
-  if (!valid) {
-    showAlert('alertRegister', 'Bitte fülle alle Pflichtfelder aus.', 'error');
+  if (errors.length > 0) {
+    showAlert(alertId, errors.join('<br>'), 'error');
     return;
   }
 
-  hideAlert('alertRegister');
+  hideAlert(alertId);
   document.getElementById('form-step-' + currentStep).style.display = 'none';
   document.getElementById('form-step-' + step).style.display = 'block';
 
@@ -1596,6 +1733,42 @@ function prevStep(step) {
   window.scrollTo(0, 0);
 }
 
+// ─── Life Situation Tag Picker ───
+function toggleLifeTag(el) {
+  el.classList.toggle('selected');
+  updateLifeTags();
+}
+
+function removeLifeTag(val) {
+  const opt = document.querySelector('#ls-options .tag-picker-option[data-value="' + val + '"]');
+  if (opt) opt.classList.remove('selected');
+  updateLifeTags();
+}
+
+function updateLifeTags() {
+  const selected = document.querySelectorAll('#ls-options .tag-picker-option.selected');
+  const container = document.getElementById('ls-selected');
+  container.innerHTML = Array.from(selected).map(s =>
+    '<span class="tag-chip">' + s.textContent + '<span class="tag-remove" onclick="removeLifeTag(\'' + s.dataset.value + '\')">&times;</span></span>'
+  ).join('');
+}
+
+function filterLifeTags(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#ls-options .tag-picker-option').forEach(o => {
+    o.style.display = o.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('#ls-options .tag-picker-group').forEach(g => {
+    let sib = g.nextElementSibling;
+    let anyVisible = false;
+    while (sib && !sib.classList.contains('tag-picker-group')) {
+      if (sib.classList.contains('tag-picker-option') && sib.style.display !== 'none') anyVisible = true;
+      sib = sib.nextElementSibling;
+    }
+    g.style.display = anyVisible ? '' : 'none';
+  });
+}
+
 // ─── SafeNow Usage Toggle ───
 document.querySelectorAll('[name="uses_safenow"]').forEach(radio => {
   radio.addEventListener('change', function() {
@@ -1608,16 +1781,23 @@ document.querySelectorAll('[name="uses_safenow"]').forEach(radio => {
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  // Validate consent
-  if (!document.getElementById('consent').checked) {
-    showAlert('alertRegister', 'Bitte stimme der Datenschutzerklärung zu.', 'error');
-    return;
-  }
+  // Validate step 3
+  const step3Errors = [];
 
-  // Validate at least one method selected
   const methods = document.querySelectorAll('[name="methods"]:checked');
   if (methods.length === 0) {
-    showAlert('alertRegister', 'Bitte wähle mindestens eine Research-Methode.', 'error');
+    step3Errors.push('Bitte wähle mindestens eine Research-Methode.');
+  }
+
+  if (!document.getElementById('consent').checked) {
+    document.getElementById('consentRow').classList.add('has-error');
+    step3Errors.push('Bitte stimme der Datenschutzerklärung zu.');
+  } else {
+    document.getElementById('consentRow').classList.remove('has-error');
+  }
+
+  if (step3Errors.length > 0) {
+    showAlert('alertStep3', step3Errors.join('<br>'), 'error');
     return;
   }
 
@@ -1647,9 +1827,10 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     localStorage.setItem('lup_email', formData.email);
 
     document.getElementById('confirmEmail').textContent = formData.email;
+    document.getElementById('confirmName').textContent = formData.firstname || 'du';
     showView('success');
   } catch (err) {
-    showAlert('alertRegister', err.message || 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut.', 'error');
+    showAlert('alertStep3', err.message || 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut.', 'error');
   } finally {
     btn.classList.remove('loading');
   }
@@ -1676,10 +1857,22 @@ function collectFormData() {
   });
 
   // Checkbox groups
-  ['device', 'life_situation', 'methods', 'language'].forEach(name => {
+  ['device', 'methods', 'language'].forEach(name => {
     const checked = form.querySelectorAll(`[name="${name}"]:checked`);
     data[name] = Array.from(checked).map(c => c.value).join(',');
   });
+
+  // Life situation from tag picker
+  const lsSelected = document.querySelectorAll('#ls-options .tag-picker-option.selected');
+  data.life_situation = Array.from(lsSelected).map(s => s.dataset.value).join(',');
+
+  // Append free text for life_situation
+  const lsOther = form.querySelector('[name="life_situation_other"]');
+  if (lsOther && lsOther.value.trim()) {
+    data.life_situation = data.life_situation
+      ? data.life_situation + ',' + lsOther.value.trim()
+      : lsOther.value.trim();
+  }
 
   return data;
 }
@@ -1844,7 +2037,13 @@ function logout() {
 function showAlert(id, message, type) {
   const el = document.getElementById(id);
   el.className = `alert alert-${type} show`;
-  el.innerHTML = (type === 'error' ? '&#9888;' : '&#10003;') + ' ' + message;
+  const icon = type === 'error' ? '&#9888;' : '&#10003;';
+  const lines = message.split('<br>').filter(l => l.trim());
+  if (lines.length > 1) {
+    el.innerHTML = icon + '<div class="alert-lines">' + lines.map(l => `<span>${l}</span>`).join('') + '</div>';
+  } else {
+    el.innerHTML = icon + ' ' + message;
+  }
 }
 
 function hideAlert(id) {
