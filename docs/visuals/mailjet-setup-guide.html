@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mailjet Setup Guide — SafeNow Lead User Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --bg: #ffffff;
+  --surface: #f5f5f5;
+  --surface-elevated: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --border-bright: rgba(0,0,0,0.15);
+  --text: #000000;
+  --text-dim: #333333;
+  --text-muted: rgba(0,0,0,0.5);
+  --accent-blue: #0869d8;
+  --accent-blue-light: #3898ec;
+  --accent-blue-dim: rgba(8,105,216,0.08);
+  --accent-pink: #e8006f;
+  --accent-pink-dim: rgba(232,0,111,0.06);
+  --success: #0FAC74;
+  --success-dim: rgba(15,172,116,0.08);
+  --warning: #F5B609;
+  --warning-dim: rgba(245,182,9,0.08);
+  --error: #F5094C;
+  --card-radius: 15px;
+  --pill-radius: 2000px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Header ── */
+.header {
+  padding: 60px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, var(--accent-blue-dim) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.header-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: var(--pill-radius);
+  background: var(--accent-blue-dim);
+  color: var(--accent-blue);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header h1 {
+  font-size: 36px; font-weight: 800;
+  letter-spacing: -1.5px; line-height: 1.1;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.header p {
+  font-size: 16px; color: var(--text-muted);
+  max-width: 520px; margin: 0 auto;
+  position: relative;
+}
+
+/* ── Architecture Diagram ── */
+.arch-section {
+  padding: 40px 0 60px;
+}
+
+.arch-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 32px 16px;
+  overflow-x: auto;
+}
+
+.arch-box {
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 140px;
+  position: relative;
+}
+
+.arch-box .arch-label {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.arch-box .arch-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.arch-frontend {
+  background: var(--accent-blue-dim);
+  border: 1.5px solid rgba(8,105,216,0.2);
+}
+.arch-frontend .arch-label { color: var(--accent-blue); }
+
+.arch-proxy {
+  background: var(--surface);
+  border: 1.5px solid var(--border-bright);
+}
+
+.arch-mailjet {
+  background: var(--success-dim);
+  border: 1.5px solid rgba(15,172,116,0.2);
+}
+.arch-mailjet .arch-label { color: var(--success); }
+
+.arch-dashboard {
+  background: var(--warning-dim);
+  border: 1.5px solid rgba(245,182,9,0.25);
+}
+.arch-dashboard .arch-label { color: #b8860b; }
+
+.arch-arrow {
+  font-size: 20px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.arch-arrow-down {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 18px;
+  padding: 4px 0;
+}
+
+.arch-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Steps ── */
+.steps-section {
+  padding: 20px 0 80px;
+}
+
+.step {
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.step:nth-child(1) { animation-delay: 0.1s; }
+.step:nth-child(2) { animation-delay: 0.2s; }
+.step:nth-child(3) { animation-delay: 0.3s; }
+.step:nth-child(4) { animation-delay: 0.4s; }
+.step:nth-child(5) { animation-delay: 0.5s; }
+.step:nth-child(6) { animation-delay: 0.6s; }
+.step:nth-child(7) { animation-delay: 0.7s; }
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step { opacity: 1; transform: none; animation: none; }
+}
+
+.step-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+
+.step-num {
+  width: 36px; height: 36px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.step-body {
+  margin-left: 50px;
+}
+
+.step-body p {
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.step-body a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+}
+.step-body a:hover { text-decoration: underline; }
+
+/* ── Code Blocks ── */
+.code-block {
+  background: #0d1117;
+  color: #e6edf3;
+  border-radius: 10px;
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-x: auto;
+  margin: 12px 0 16px;
+  position: relative;
+}
+
+.code-block .comment { color: #8b949e; }
+.code-block .string { color: #a5d6ff; }
+.code-block .cmd { color: #79c0ff; }
+.code-block .var { color: #ffa657; }
+.code-block .flag { color: #d2a8ff; }
+
+.code-label {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Info Cards ── */
+.info-card {
+  border-radius: var(--card-radius);
+  padding: 20px 24px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.info-card strong { font-weight: 700; }
+
+.info-tip {
+  background: var(--accent-blue-dim);
+  border-left: 3px solid var(--accent-blue);
+}
+
+.info-warning {
+  background: var(--warning-dim);
+  border-left: 3px solid var(--warning);
+}
+
+.info-success {
+  background: var(--success-dim);
+  border-left: 3px solid var(--success);
+}
+
+/* ── Screenshot Placeholder ── */
+.screenshot {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.screenshot-nav {
+  display: flex; gap: 6px;
+  margin-bottom: 16px;
+}
+
+.screenshot-nav span {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--border-bright);
+}
+
+.screenshot-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+}
+
+.screenshot-bar {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 8px;
+  font-size: 12px; color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.screenshot-url { flex: 1; }
+
+/* ── Inline Table ── */
+.props-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 12px 0 16px;
+}
+
+.props-table th {
+  text-align: left;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border-bright);
+}
+
+.props-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.props-table tr:hover td {
+  background: var(--surface);
+}
+
+.props-table code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--accent-blue-dim);
+  color: var(--accent-blue);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ── Segment Filter Example ── */
+.filter-example {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.filter-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--pill-radius);
+  font-size: 13px; font-weight: 500;
+}
+
+.filter-pill .f-key {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.filter-pill .f-op {
+  color: var(--accent-pink);
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.filter-pill .f-val {
+  color: var(--accent-blue);
+  font-weight: 700;
+}
+
+/* ── Checklist ── */
+.checklist {
+  list-style: none;
+  margin: 12px 0 16px;
+}
+
+.checklist li {
+  padding: 8px 0;
+  padding-left: 28px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 11px;
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-bright);
+  background: var(--bg);
+}
+
+.checklist li.done::before {
+  background: var(--success);
+  border-color: var(--success);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .header h1 { font-size: 28px; }
+  .step-body { margin-left: 0; margin-top: 12px; }
+  .arch-diagram { flex-direction: column; gap: 4px; }
+  .arch-arrow { transform: rotate(90deg); padding: 4px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="header">
+  <div class="header-badge">Setup Guide</div>
+  <h1>Mailjet-Anbindung für dein Lead User Panel</h1>
+  <p>Schritt-für-Schritt: Von der API-Key-Erstellung bis zur ersten gefilterten Einladungs-E-Mail.</p>
+</header>
+
+<!-- ═══════ ARCHITECTURE ═══════ -->
+<div class="container">
+  <section class="arch-section">
+    <div class="arch-diagram">
+      <div class="arch-box arch-frontend">
+        <div class="arch-label">index.html</div>
+        <div class="arch-desc">Landing Page<br>+ Formular</div>
+      </div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-box arch-proxy">
+        <div class="arch-label">Proxy Server</div>
+        <div class="arch-desc">mailjet-proxy.js<br>Express + Node</div>
+      </div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-col">
+        <div class="arch-box arch-mailjet">
+          <div class="arch-label">Mailjet API</div>
+          <div class="arch-desc">Contacts<br>+ Properties</div>
+        </div>
+        <div class="arch-arrow-down">&darr;</div>
+        <div class="arch-box arch-dashboard">
+          <div class="arch-label">Mailjet Dashboard</div>
+          <div class="arch-desc">Euer Admin-UI<br>Filter + E-Mails</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ STEPS ═══════ -->
+  <section class="steps-section">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h2 class="step-title">Mailjet API Keys holen</h2>
+      </div>
+      <div class="step-body">
+        <p>Öffne dein Mailjet-Konto und navigiere zu den API-Einstellungen:</p>
+        <p><a href="https://app.mailjet.com/account/apikeys" target="_blank">app.mailjet.com/account/apikeys &nearr;</a></p>
+
+        <div class="screenshot">
+          <div class="screenshot-nav"><span></span><span></span><span></span></div>
+          <div class="screenshot-content">
+            <div class="screenshot-bar">
+              <span class="screenshot-url">app.mailjet.com/account/apikeys</span>
+            </div>
+            <div style="padding:12px 0;">
+              <div style="font-size:13px;font-weight:700;margin-bottom:12px;">API Key Management</div>
+              <table style="width:100%;font-size:12px;border-collapse:collapse;">
+                <tr style="background:var(--surface);">
+                  <td style="padding:8px;font-weight:600;">API Key (Public)</td>
+                  <td style="padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--accent-blue);">a1b2c3d4e5f6g7h8i9j0...</td>
+                  <td style="padding:8px;text-align:right;"><span style="padding:3px 10px;background:var(--accent-blue-dim);color:var(--accent-blue);border-radius:4px;font-size:11px;font-weight:600;">Copy</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:8px;font-weight:600;">Secret Key (Private)</td>
+                  <td style="padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">••••••••••••••••••••</td>
+                  <td style="padding:8px;text-align:right;"><span style="padding:3px 10px;background:var(--accent-blue-dim);color:var(--accent-blue);border-radius:4px;font-size:11px;font-weight:600;">Show</span></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <p>Du brauchst zwei Keys:</p>
+        <ul class="checklist">
+          <li><strong>API Key (Public)</strong> — der öffentliche Schlüssel, beginnt meist mit einer langen Zeichenkette</li>
+          <li><strong>Secret Key (Private)</strong> — klicke auf "Show" und kopiere ihn. Diesen Key niemals im Frontend verwenden!</li>
+        </ul>
+
+        <div class="info-warning info-card">
+          <strong>Wichtig:</strong> Der Secret Key wird nur einmal angezeigt. Kopiere ihn sofort und speichere ihn sicher (z.B. in einem Passwort-Manager).
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h2 class="step-title">Contact List erstellen</h2>
+      </div>
+      <div class="step-body">
+        <p>Erstelle eine dedizierte Kontaktliste für das Lead User Panel:</p>
+        <p><a href="https://app.mailjet.com/contacts" target="_blank">app.mailjet.com/contacts &nearr;</a></p>
+
+        <ul class="checklist">
+          <li>Gehe zu <strong>Contacts</strong> &rarr; <strong>Contact Lists</strong></li>
+          <li>Klicke <strong>"Create a contact list"</strong></li>
+          <li>Name: <strong>"Lead User Panel"</strong></li>
+          <li>Nach dem Erstellen: Die <strong>List ID</strong> aus der URL kopieren</li>
+        </ul>
+
+        <div class="screenshot">
+          <div class="screenshot-nav"><span></span><span></span><span></span></div>
+          <div class="screenshot-content">
+            <div class="screenshot-bar">
+              <span class="screenshot-url">app.mailjet.com/contacts/lists/<strong style="color:var(--accent-pink);">123456</strong>/properties</span>
+            </div>
+            <div style="padding:8px 0;font-size:13px;">
+              <div style="font-weight:700;margin-bottom:8px;">Lead User Panel</div>
+              <div style="font-size:12px;color:var(--text-muted);">0 contacts &middot; Created today</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-tip info-card">
+          <strong>Die List ID</strong> ist die Zahl in der URL nach <code style="font-family:var(--font-mono);font-size:12px;">/lists/</code> — im Beispiel oben wäre es <strong>123456</strong>. Diese Zahl brauchst du im nächsten Schritt.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h2 class="step-title">.env Datei konfigurieren</h2>
+      </div>
+      <div class="step-body">
+        <p>Im Ordner <code style="font-family:var(--font-mono);font-size:13px;background:var(--surface);padding:2px 8px;border-radius:4px;">lead-user-panel/</code> liegt eine Vorlage. Kopiere sie und trage deine echten Keys ein:</p>
+
+        <div class="code-block">
+          <div class="code-label">Terminal</div>
+          <span class="comment"># Vorlage kopieren</span><br>
+          <span class="cmd">cp</span> .env.example .env<br><br>
+          <span class="comment"># Datei öffnen und bearbeiten</span><br>
+          <span class="cmd">nano</span> .env
+        </div>
+
+        <p>Trage dort deine drei Werte ein:</p>
+
+        <div class="code-block">
+          <div class="code-label">.env</div>
+          <span class="comment"># Dein Public API Key von Schritt 1</span><br>
+          <span class="var">MJ_APIKEY_PUBLIC</span>=<span class="string">dein_public_key_hier</span><br><br>
+          <span class="comment"># Dein Secret API Key von Schritt 1</span><br>
+          <span class="var">MJ_APIKEY_PRIVATE</span>=<span class="string">dein_secret_key_hier</span><br><br>
+          <span class="comment"># Die List ID von Schritt 2</span><br>
+          <span class="var">MJ_LIST_ID</span>=<span class="string">123456</span>
+        </div>
+
+        <div class="info-warning info-card">
+          <strong>Nie committen!</strong> Die <code style="font-family:var(--font-mono);font-size:12px;">.env</code> Datei enthält sensible Daten. Füge sie zur <code style="font-family:var(--font-mono);font-size:12px;">.gitignore</code> hinzu, falls ihr Git nutzt.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <h2 class="step-title">Server starten</h2>
+      </div>
+      <div class="step-body">
+        <p>Installiere die Abhängigkeiten und starte den Server:</p>
+
+        <div class="code-block">
+          <div class="code-label">Terminal</div>
+          <span class="comment"># In den Ordner wechseln</span><br>
+          <span class="cmd">cd</span> lead-user-panel<br><br>
+          <span class="comment"># Pakete installieren</span><br>
+          <span class="cmd">npm</span> install<br><br>
+          <span class="comment"># Server starten (liest .env automatisch)</span><br>
+          <span class="cmd">npm</span> install <span class="flag">dotenv</span><br>
+          <span class="cmd">node</span> <span class="flag">-r</span> dotenv/config mailjet-proxy.js
+        </div>
+
+        <p>Beim ersten Start passiert automatisch Folgendes:</p>
+
+        <div class="code-block">
+          <div class="code-label">Output</div>
+          <span style="color:#58a6ff;">🛡️  SafeNow Lead User Panel</span><br>
+          <span style="color:#8b949e;">   Server läuft auf http://localhost:3000</span><br>
+          <span style="color:#8b949e;">   Mailjet API Key: a1b2c3d4...</span><br>
+          <span style="color:#8b949e;">   Contact List ID: 123456</span><br><br>
+          <span style="color:#58a6ff;">🔧 Prüfe Contact Properties in Mailjet...</span><br>
+          <span style="color:#3fb950;">   ✓ firstname angelegt</span><br>
+          <span style="color:#3fb950;">   ✓ lastname angelegt</span><br>
+          <span style="color:#3fb950;">   ✓ age_group angelegt</span><br>
+          <span style="color:#3fb950;">   ✓ gender angelegt</span><br>
+          <span style="color:#3fb950;">   ✓ location angelegt</span><br>
+          <span style="color:#8b949e;">   ... (19 Properties insgesamt)</span><br><br>
+          <span style="color:#3fb950;">✅ Contact Properties bereit.</span><br>
+          <span style="color:#58a6ff;">🚀 Bereit! Öffne http://localhost:3000</span>
+        </div>
+
+        <div class="info-success info-card">
+          <strong>Das war's!</strong> Der Server legt beim Start alle 19 Contact Properties automatisch in Mailjet an. Du musst nichts manuell konfigurieren.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <h2 class="step-title">Testen: Erste Anmeldung</h2>
+      </div>
+      <div class="step-body">
+        <p>Öffne <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> und melde dich selbst testweise an. Danach überprüfe in Mailjet:</p>
+
+        <ul class="checklist">
+          <li>Gehe zu <a href="https://app.mailjet.com/contacts" target="_blank">Contacts</a> &rarr; öffne die Liste "Lead User Panel"</li>
+          <li>Dein Test-Kontakt sollte dort erscheinen</li>
+          <li>Klicke auf den Kontakt &rarr; alle Properties sollten befüllt sein</li>
+          <li>Teste auch "Profil bearbeiten" und "Daten löschen" in der App</li>
+        </ul>
+
+        <div class="info-tip info-card">
+          <strong>Bulk-Jobs sind asynchron</strong> — es kann 1–2 Sekunden dauern, bis der Kontakt in Mailjet sichtbar ist. Einfach Seite refreshen.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <h2 class="step-title">Internes Filtern: Segmente in Mailjet</h2>
+      </div>
+      <div class="step-body">
+        <p>Das ist euer "Admin-Dashboard" — direkt in Mailjet, ohne eigene UI. So erstellt ihr Filter-Segmente:</p>
+
+        <ul class="checklist">
+          <li><strong>Contacts</strong> &rarr; <strong>Segments</strong> &rarr; <strong>"Create a segment"</strong></li>
+          <li>Wählt die Contact List <strong>"Lead User Panel"</strong></li>
+          <li>Fügt Filter-Bedingungen hinzu basierend auf den Contact Properties</li>
+          <li>Speichert das Segment für spätere Nutzung</li>
+        </ul>
+
+        <p style="margin-top:16px;font-weight:600;">Beispiel: "Interview-Kandidat:innen aus München"</p>
+        <div class="filter-example">
+          <div class="filter-pill"><span class="f-key">methods</span> <span class="f-op">enthält</span> <span class="f-val">moderiert</span></div>
+          <div class="filter-pill"><span class="f-key">location</span> <span class="f-op">enthält</span> <span class="f-val">München</span></div>
+          <div class="filter-pill"><span class="f-key">time_commitment</span> <span class="f-op">=</span> <span class="f-val">1h</span></div>
+        </div>
+
+        <p style="margin-top:8px;font-weight:600;">Beispiel: "iOS-Nutzer:innen für Prototypen-Test"</p>
+        <div class="filter-example">
+          <div class="filter-pill"><span class="f-key">device</span> <span class="f-op">enthält</span> <span class="f-val">ios</span></div>
+          <div class="filter-pill"><span class="f-key">methods</span> <span class="f-op">enthält</span> <span class="f-val">prototypen</span></div>
+          <div class="filter-pill"><span class="f-key">uses_safenow</span> <span class="f-op">=</span> <span class="f-val">ja</span></div>
+        </div>
+
+        <p style="margin-top:8px;font-weight:600;">Beispiel: "Friends & Family für Quick-Umfrage"</p>
+        <div class="filter-example">
+          <div class="filter-pill"><span class="f-key">referral_source</span> <span class="f-op">=</span> <span class="f-val">friends_family</span></div>
+          <div class="filter-pill"><span class="f-key">methods</span> <span class="f-op">enthält</span> <span class="f-val">umfragen</span></div>
+        </div>
+
+        <div class="info-success info-card">
+          <strong>Pro-Tipp:</strong> Gespeicherte Segmente könnt ihr direkt als Empfänger einer E-Mail-Kampagne verwenden. So schickt ihr z.B. eine Einladung zum nächsten Usability-Test nur an die passenden Leute.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <h2 class="step-title">Deployment für Produktion</h2>
+      </div>
+      <div class="step-body">
+        <p>Für den Live-Betrieb braucht der Proxy-Server ein Hosting. Drei einfache Optionen:</p>
+
+        <table class="props-table">
+          <thead>
+            <tr><th>Option</th><th>Aufwand</th><th>Kosten</th><th>Empfehlung</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Railway</strong></td>
+              <td>Git Push, fertig</td>
+              <td>~5$/Monat</td>
+              <td><span style="background:var(--success-dim);color:var(--success);padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">Empfohlen</span></td>
+            </tr>
+            <tr>
+              <td><strong>Render</strong></td>
+              <td>Git Push, fertig</td>
+              <td>Free Tier</td>
+              <td>Gut für Start</td>
+            </tr>
+            <tr>
+              <td><strong>Vercel + Serverless</strong></td>
+              <td>Etwas Umbau</td>
+              <td>Free Tier</td>
+              <td>Wenn ihr Vercel nutzt</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Bei allen Optionen: <code style="font-family:var(--font-mono);font-size:12px;">.env</code>-Variablen als Environment Variables im Dashboard des Hosters eintragen.</p>
+
+        <div class="code-block">
+          <div class="code-label">Railway</div>
+          <span class="comment"># Railway CLI installieren und deployen</span><br>
+          <span class="cmd">npm</span> install <span class="flag">-g</span> @railway/cli<br>
+          <span class="cmd">railway</span> login<br>
+          <span class="cmd">railway</span> init<br>
+          <span class="cmd">railway</span> up<br><br>
+          <span class="comment"># Env-Variablen setzen</span><br>
+          <span class="cmd">railway</span> variables set <span class="var">MJ_APIKEY_PUBLIC</span>=<span class="string">xxx</span><br>
+          <span class="cmd">railway</span> variables set <span class="var">MJ_APIKEY_PRIVATE</span>=<span class="string">yyy</span><br>
+          <span class="cmd">railway</span> variables set <span class="var">MJ_LIST_ID</span>=<span class="string">123456</span>
+        </div>
+
+        <p>Dann im Frontend <code style="font-family:var(--font-mono);font-size:12px;">index.html</code> die API-URL anpassen:</p>
+
+        <div class="code-block">
+          <div class="code-label">index.html — Zeile anpassen</div>
+          <span class="comment">// Von:</span><br>
+          API_URL: <span class="string">'/api'</span>,<br><br>
+          <span class="comment">// Zu (deine Railway-URL):</span><br>
+          API_URL: <span class="string">'https://dein-project.up.railway.app/api'</span>,
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ═══════ CONTACT PROPERTIES REFERENCE ═══════ -->
+<div class="container" style="padding-bottom:60px;">
+  <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.8px;margin-bottom:20px;">Alle Contact Properties im Überblick</h2>
+  <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Diese werden automatisch beim ersten Server-Start in Mailjet angelegt. Du kannst sie in Mailjet unter "Contact Properties" sehen und für Segmente nutzen.</p>
+
+  <table class="props-table">
+    <thead>
+      <tr><th>Property</th><th>Beschreibung</th><th>Beispielwerte</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>firstname</code></td><td>Vorname</td><td>Julia, Max, Lena</td></tr>
+      <tr><td><code>lastname</code></td><td>Nachname</td><td>Müller, Schmidt</td></tr>
+      <tr><td><code>age_group</code></td><td>Altersgruppe</td><td>18-24, 25-34, 35-44, 45-54, 55-64, 65+</td></tr>
+      <tr><td><code>gender</code></td><td>Geschlecht</td><td>weiblich, maennlich, divers, keine_angabe</td></tr>
+      <tr><td><code>location</code></td><td>PLZ / Wohnort</td><td>80331 München, 10115 Berlin</td></tr>
+      <tr><td><code>profession</code></td><td>Beruf</td><td>Studentin, Pflegekraft, IT</td></tr>
+      <tr><td><code>referral_source</code></td><td>Herkunft</td><td>friends_family, social_media, safenow_app, newsletter</td></tr>
+      <tr><td><code>uses_safenow</code></td><td>SafeNow-Nutzung</td><td>ja, nein, frueher</td></tr>
+      <tr><td><code>safenow_since</code></td><td>Nutzungsdauer</td><td>&lt; 3 Monate, 3-6 Monate, &gt; 1 Jahr</td></tr>
+      <tr><td><code>safenow_frequency</code></td><td>Häufigkeit</td><td>taeglich, woechentlich, monatlich, selten</td></tr>
+      <tr><td><code>device</code></td><td>Geräte (komma-getrennt)</td><td>ios, android, ios,android</td></tr>
+      <tr><td><code>features_used</code></td><td>Genutzte Features</td><td>Alarm, Begleitung, Community</td></tr>
+      <tr><td><code>life_situation</code></td><td>Lebenssituation</td><td>alleinlebend, kinder, pendler, student</td></tr>
+      <tr><td><code>safety_feeling</code></td><td>Sicherheitsgefühl</td><td>sehr_sicher, eher_sicher, teils_teils, eher_unsicher</td></tr>
+      <tr><td><code>safety_situations</code></td><td>Unsichere Situationen</td><td>Freitext</td></tr>
+      <tr><td><code>methods</code></td><td>Research-Methoden</td><td>umfragen, moderiert, unmoderiert, inhouse_muenchen, prototypen, fokusgruppen</td></tr>
+      <tr><td><code>time_commitment</code></td><td>Zeitbudget / Monat</td><td>15min, 30min, 1h, 2h+</td></tr>
+      <tr><td><code>language</code></td><td>Sprache(n)</td><td>deutsch, englisch</td></tr>
+      <tr><td><code>notes</code></td><td>Anmerkungen</td><td>Freitext</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer class="footer">
+  SafeNow Lead User Panel — Setup Guide &middot; Stand: April 2026
+</footer>
+
+</body>
+</html>

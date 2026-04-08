@@ -1,0 +1,16 @@
+{
+  "name": "safenow-lead-user-panel",
+  "version": "1.0.0",
+  "description": "SafeNow Lead User Panel — Landing Page + Mailjet Integration",
+  "main": "mailjet-proxy.js",
+  "scripts": {
+    "start": "node mailjet-proxy.js",
+    "dev": "node mailjet-proxy.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.1",
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
+  }
+}

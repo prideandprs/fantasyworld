@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeNow Lead User Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   SafeNow Lead User Panel — Styles
+   ═══════════════════════════════════════════════ */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-dark: #000000;
+  --bg-dark-alt: #141414;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: rgba(0,0,0,0.5);
+  --text-on-dark: #ffffff;
+  --accent-blue: #0869d8;
+  --accent-blue-light: #3898ec;
+  --accent-blue-hover: #0555b0;
+  --accent-pink: #e8006f;
+  --card-bg: #efefef;
+  --card-radius: 15px;
+  --pill-radius: 2000px;
+  --error: #F5094C;
+  --success: #0FAC74;
+  --warning: #F5B609;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ─── View Management ─── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ─── Navigation ─── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 0 32px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--text-primary);
+}
+
+.nav-logo svg { width: 36px; height: 36px; }
+
+.nav-logo span {
+  font-weight: 700; font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.nav-links { display: flex; gap: 8px; align-items: center; }
+
+.nav-link {
+  padding: 8px 16px; border-radius: var(--pill-radius);
+  font-size: 14px; font-weight: 500;
+  color: var(--text-secondary); text-decoration: none;
+  transition: all 0.2s; cursor: pointer;
+  border: none; background: none;
+}
+.nav-link:hover { background: var(--bg-secondary); color: var(--text-primary); }
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 28px; border-radius: var(--pill-radius);
+  font-family: inherit; font-size: 15px; font-weight: 600;
+  letter-spacing: -0.3px; cursor: pointer;
+  transition: all 0.2s ease; border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--accent-blue); color: white;
+}
+.btn-primary:hover { background: var(--accent-blue-hover); transform: translateY(-1px); }
+
+.btn-dark {
+  background: var(--bg-dark); color: white;
+}
+.btn-dark:hover { background: var(--bg-dark-alt); transform: translateY(-1px); }
+
+.btn-outline {
+  background: transparent; color: var(--text-primary);
+  border: 1.5px solid rgba(0,0,0,0.15);
+}
+.btn-outline:hover { border-color: var(--text-primary); }
+
+.btn-ghost {
+  background: transparent; color: var(--accent-blue);
+  padding: 8px 16px;
+}
+.btn-ghost:hover { background: rgba(8,105,216,0.06); }
+
+.btn-sm { padding: 8px 20px; font-size: 13px; }
+
+.btn-lg { padding: 16px 36px; font-size: 17px; }
+
+/* ─── Hero Section ─── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(8,105,216,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(232,0,111,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border-radius: var(--pill-radius);
+  background: rgba(8,105,216,0.08);
+  color: var(--accent-blue);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: -0.2px;
+  margin-bottom: 32px;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 800;
+  letter-spacing: -2.4px;
+  line-height: 1.05;
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.hero h1 .accent { color: var(--accent-blue); }
+
+.hero p {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--text-muted);
+  max-width: 560px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* ─── Features Section ─── */
+.features {
+  padding: 100px 24px;
+  background: var(--bg-secondary);
+}
+
+.features-inner {
+  max-width: 1100px; margin: 0 auto;
+}
+
+.section-label {
+  font-size: 13px; font-weight: 600;
+  color: var(--accent-blue);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 60px;
+  max-width: 600px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--bg-primary);
+  border-radius: var(--card-radius);
+  padding: 36px 32px;
+  transition: transform 0.2s;
+}
+.feature-card:hover { transform: translateY(-3px); }
+
+.feature-icon {
+  width: 48px; height: 48px;
+  background: rgba(8,105,216,0.08);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.feature-card h3 {
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  font-size: 14px; color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ─── Methods Section ─── */
+.methods {
+  padding: 100px 24px;
+}
+
+.methods-inner {
+  max-width: 1100px; margin: 0 auto;
+  text-align: center;
+}
+
+.methods-list {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.method-pill {
+  padding: 14px 28px;
+  background: var(--bg-secondary);
+  border-radius: var(--pill-radius);
+  font-size: 15px; font-weight: 500;
+  letter-spacing: -0.3px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.method-pill .icon { font-size: 18px; }
+
+/* ─── Method Cards (with explanations) ─── */
+.methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.method-card {
+  background: var(--bg-secondary);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.method-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.method-card-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+
+.method-card-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.method-card-header h3 {
+  font-size: 16px; font-weight: 700;
+  letter-spacing: -0.3px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.method-time {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  background: rgba(8,105,216,0.08);
+  padding: 2px 8px;
+  border-radius: var(--pill-radius);
+}
+
+.method-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ─── Promise Strip ─── */
+.promise-strip {
+  padding: 0 24px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 2;
+}
+
+.promise-inner {
+  max-width: 900px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px 36px;
+  background: var(--bg-primary);
+  border-radius: var(--card-radius);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  flex-wrap: wrap;
+}
+
+.promise-item {
+  display: flex; align-items: center; gap: 12px;
+  flex: 1; min-width: 200px;
+}
+
+.promise-icon {
+  font-size: 24px; flex-shrink: 0;
+}
+
+.promise-item strong {
+  display: block;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.promise-item span {
+  font-size: 12px; color: var(--text-muted);
+}
+
+.promise-divider {
+  width: 1px; height: 36px;
+  background: rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .promise-inner { flex-direction: column; gap: 16px; padding: 24px; }
+  .promise-divider { width: 100%; height: 1px; }
+}
+
+/* ─── How It Works ─── */
+.how-it-works {
+  padding: 80px 24px;
+  background: var(--bg-secondary);
+}
+
+.how-inner {
+  max-width: 800px; margin: 0 auto;
+}
+
+.how-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 48px;
+}
+
+.how-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+  padding-bottom: 36px;
+}
+
+.how-step:last-child { padding-bottom: 0; }
+
+.how-step-line {
+  position: absolute;
+  left: 19px; top: 44px;
+  bottom: 0;
+  width: 2px;
+  background: rgba(0,0,0,0.08);
+}
+
+.how-step:last-child .how-step-line { display: none; }
+
+.how-step-num {
+  width: 40px; height: 40px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.how-step-content h3 {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.how-step-content p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ─── CTA Section ─── */
+.cta-section {
+  padding: 100px 24px;
+  background: var(--bg-dark);
+  color: var(--text-on-dark);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(8,105,216,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.cta-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.cta-section p {
+  color: rgba(255,255,255,0.5);
+  font-size: 18px;
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto; margin-right: auto;
+  position: relative;
+}
+
+.cta-section .btn { position: relative; }
+
+/* ─── Footer ─── */
+.footer {
+  padding: 32px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Forms ─── */
+.form-container {
+  max-width: 640px; margin: 0 auto;
+  padding: 120px 24px 80px;
+}
+
+.form-header {
+  margin-bottom: 40px;
+}
+
+.form-header h1 {
+  font-size: 32px; font-weight: 800;
+  letter-spacing: -1.2px;
+  margin-bottom: 8px;
+}
+
+.form-header p {
+  color: var(--text-muted); font-size: 16px;
+}
+
+.form-section {
+  margin-bottom: 36px;
+}
+
+.form-section-title {
+  font-size: 14px; font-weight: 700;
+  letter-spacing: -0.2px;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(8,105,216,0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.form-group label .required {
+  color: var(--error);
+}
+
+.form-group .hint {
+  font-size: 12px; color: var(--text-muted);
+  margin-top: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(8,105,216,0.1);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+/* ─── Checkbox & Radio Groups ─── */
+.check-group {
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+
+.check-item {
+  position: relative;
+}
+
+.check-item input {
+  position: absolute; opacity: 0; pointer-events: none;
+}
+
+.check-item label {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: var(--pill-radius);
+  font-size: 14px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.check-item input:checked + label {
+  background: rgba(8,105,216,0.08);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.check-item label:hover {
+  border-color: rgba(0,0,0,0.3);
+}
+
+/* ─── Form Row ─── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ─── Steps Indicator ─── */
+.steps {
+  display: flex; align-items: center; gap: 0;
+  margin-bottom: 40px;
+}
+
+.step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+.step.active { color: var(--accent-blue); }
+.step.done { color: var(--success); }
+
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.step.active .step-num {
+  background: var(--accent-blue); color: white;
+}
+
+.step.done .step-num {
+  background: var(--success); color: white;
+}
+
+.step-line {
+  flex: 1; height: 2px;
+  background: rgba(0,0,0,0.08);
+  margin: 0 12px;
+}
+
+.step-line.done { background: var(--success); }
+
+/* ─── Form Navigation ─── */
+.form-nav {
+  display: flex; justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ─── Profile View ─── */
+.profile-card {
+  background: var(--bg-secondary);
+  border-radius: var(--card-radius);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.profile-card h3 {
+  font-size: 14px; font-weight: 700;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.profile-field {
+  display: flex; justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+
+.profile-field:last-child { border-bottom: none; }
+.profile-field .label { color: var(--text-muted); font-weight: 500; }
+.profile-field .value { font-weight: 600; text-align: right; max-width: 60%; }
+
+.profile-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  justify-content: flex-end;
+}
+
+.tag {
+  padding: 4px 12px;
+  background: rgba(8,105,216,0.08);
+  color: var(--accent-blue);
+  border-radius: var(--pill-radius);
+  font-size: 12px; font-weight: 600;
+}
+
+/* ─── Alerts ─── */
+.alert {
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px; font-weight: 500;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.alert.show { display: flex; align-items: center; gap: 8px; }
+.alert-success { background: rgba(15,172,116,0.1); color: #0a7a52; }
+.alert-error { background: rgba(245,9,76,0.1); color: #c4073d; }
+
+/* ─── Loading State ─── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+.btn.loading .spinner { display: inline-block; }
+.btn.loading .btn-text { display: none; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .nav { padding: 0 16px; }
+  .hero { padding: 100px 20px 60px; }
+  .features, .methods, .cta-section { padding: 60px 20px; }
+  .form-container { padding: 100px 20px 60px; }
+  .nav-links .nav-link-text { display: none; }
+}
+
+/* ─── Privacy Section in Form ─── */
+.privacy-note {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+.privacy-note a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+/* ─── Delete / Danger zone ─── */
+.danger-zone {
+  border: 1.5px solid rgba(245,9,76,0.2);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.danger-zone h3 {
+  color: var(--error);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.danger-zone p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.btn-danger {
+  background: var(--error);
+  color: white;
+}
+.btn-danger:hover {
+  background: #c4073d;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════ -->
+<nav class="nav">
+  <a href="#" class="nav-logo" onclick="showView('landing')">
+    <svg width="36" height="36" viewBox="0 0 160 160" fill="none">
+      <rect width="160" height="160" rx="80" fill="url(#navGrad)"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M63.13 102.21L74.44 91.54C69.14 89.82 65.16 85.42 63.98 79.98C62.8 74.54 64.61 68.89 68.72 65.13L87.67 47.26C74.6 43.76 60.8 49.37 53.9 60.98C47 72.6 48.7 87.38 58.05 97.13L63.13 102.21ZM106.2 61.63C107.64 64.22 108.69 67.01 109.3 69.9L109.28 69.92C111.42 79.71 108.53 89.91 101.59 97.13L79.82 118.85L68.96 107.99L89.87 88.25L90.17 87.97C94.07 84.25 95.77 78.78 94.68 73.51C93.59 68.23 89.86 63.89 84.8 62.01L96.33 51.14C100.42 53.79 103.8 57.39 106.2 61.63Z" fill="white"/>
+      <defs><linearGradient id="navGrad" x1="21.6" y1="24" x2="134.4" y2="144" gradientUnits="userSpaceOnUse"><stop stop-color="#0995FF"/><stop offset="1" stop-color="#0034E3"/></linearGradient></defs>
+    </svg>
+    <span>SafeNow</span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-link" onclick="showView('landing')"><span class="nav-link-text">Startseite</span></button>
+    <button class="nav-link" onclick="showView('register')"><span class="nav-link-text">Anmelden</span></button>
+    <button class="btn btn-primary btn-sm" onclick="showView('register')">Dabei sein</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     LANDING PAGE
+     ═══════════════════════════════════════════════ -->
+<div id="view-landing" class="view active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">Werde Teil der SafeNow Community</div>
+    <h1>Sicherheit beginnt mit <span class="accent">dir</span></h1>
+    <p>Du weißt am besten, was du brauchst, um dich sicher zu fühlen. Deshalb bauen wir SafeNow nicht alleine — sondern mit dir. Werde Teil unserer Community und gestalte mit uns die App, die Millionen Menschen schützt.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" onclick="showView('register')">Dabei sein</button>
+      <a href="#why" class="btn btn-outline btn-lg">Warum mitmachen?</a>
+    </div>
+  </section>
+
+  <!-- Promise Strip -->
+  <section class="promise-strip">
+    <div class="promise-inner">
+      <div class="promise-item">
+        <span class="promise-icon">&#9203;</span>
+        <div>
+          <strong>3 Minuten Anmeldung</strong>
+          <span>Kein Abo. Kein Kleingedrucktes.</span>
+        </div>
+      </div>
+      <div class="promise-divider"></div>
+      <div class="promise-item">
+        <span class="promise-icon">&#128588;</span>
+        <div>
+          <strong>Du entscheidest immer</strong>
+          <span>Jede Einladung ist freiwillig. Immer.</span>
+        </div>
+      </div>
+      <div class="promise-divider"></div>
+      <div class="promise-item">
+        <span class="promise-icon">&#128065;</span>
+        <div>
+          <strong>Du siehst, was passiert</strong>
+          <span>Wir zeigen dir, was aus eurem Feedback wird.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why / Emotional Features -->
+  <section class="features" id="why">
+    <div class="features-inner">
+      <div class="section-label">Warum das wichtig ist</div>
+      <h2 class="section-title">SafeNow gehört uns allen. Dir auch.</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#128170;</div>
+          <h3>Deine Erfahrung zählt</h3>
+          <p>Niemand kennt deinen Alltag besser als du. Ob du nachts alleine nach Hause gehst oder deine Kinder zur Schule schickst — dein Wissen macht SafeNow besser. Nicht irgendwann. Jetzt.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#129309;</div>
+          <h3>Gemeinsam, nicht einsam</h3>
+          <p>Du bist nicht "Testperson Nr. 47". Du bist Teil einer Community, die zusammen an etwas Wichtigem arbeitet. Wir teilen Updates, feiern Erfolge und sagen ehrlich, wenn etwas nicht klappt.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9889;</div>
+          <h3>Dein Einfluss ist real</h3>
+          <p>Kein Feedback-Friedhof. Was du uns sagst, landet nicht in einer Schublade. Du siehst in der App, was sich durch euer Feedback verändert hat. Versprochen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="how-inner">
+      <div class="section-label">So läuft's</div>
+      <h2 class="section-title">Mitmachen ist einfach — und du entscheidest immer selbst</h2>
+
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-num">1</div>
+          <div class="how-step-content">
+            <h3>Melde dich an</h3>
+            <p>3 Minuten, ein paar Fragen zu dir und wie du SafeNow nutzt. Fertig. Kein Abo, kein Kleingedrucktes.</p>
+          </div>
+          <div class="how-step-line"></div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">2</div>
+          <div class="how-step-content">
+            <h3>Wir melden uns bei dir</h3>
+            <p>Wenn eine Studie zu deinem Profil passt, bekommst du eine Einladung per E-Mail. Kurze Umfrage, Prototyp testen oder Interview — du sagst uns vorher, was für dich passt.</p>
+          </div>
+          <div class="how-step-line"></div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">3</div>
+          <div class="how-step-content">
+            <h3>Dein Feedback wirkt</h3>
+            <p>Was du uns sagst, fließt direkt in die Produktentwicklung. Und du siehst in der App, was daraus wird. Das ist kein Marketing — das ist unser Versprechen.</p>
+          </div>
+          <div class="how-step-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Methods — mit Erklärungen -->
+  <section class="methods">
+    <div class="methods-inner">
+      <div class="section-label">Dein Tempo, dein Weg</div>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Du entscheidest, wie du mitmachst</h2>
+      <p style="color:var(--text-muted);max-width:540px;margin:0 auto 40px;font-size:15px;">Nicht jeder hat Zeit für ein Interview — und das ist völlig okay. Schon eine kurze Umfrage hilft uns weiter. Hier sind die Möglichkeiten:</p>
+
+      <div class="methods-grid">
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#128221;</span>
+            <div>
+              <h3>Online-Umfragen</h3>
+              <span class="method-time">5–10 Min</span>
+            </div>
+          </div>
+          <p>Ein kurzer Fragebogen, den du ausfüllst, wann es dir passt. Am Handy oder am Laptop, vom Sofa aus. Ideal, wenn du wenig Zeit hast, aber trotzdem mitreden willst.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#128187;</span>
+            <div>
+              <h3>Unmoderierte Tests</h3>
+              <span class="method-time">10–20 Min</span>
+            </div>
+          </div>
+          <p>Du bekommst einen Prototyp oder eine Aufgabe und probierst sie selbst aus — ohne dass jemand zuschaut oder dich anleitet. Du machst das alleine, in deinem Tempo, von zuhause.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#127908;</span>
+            <div>
+              <h3>Persönliche Gespräche</h3>
+              <span class="method-time">30–45 Min</span>
+            </div>
+          </div>
+          <p>Ein lockeres Gespräch per Videocall mit jemandem aus unserem Team. Wir zeigen dir Ideen, du sagst uns ehrlich, was du denkst. Kein Test — einfach ein Austausch auf Augenhöhe.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#127970;</span>
+            <div>
+              <h3>Vor Ort in München</h3>
+              <span class="method-time">45–90 Min</span>
+            </div>
+          </div>
+          <p>Komm vorbei und lerne das Team kennen! Du testest neue Features direkt bei uns im Büro, wir quatschen bei Kaffee und Snacks. Nur wenn du in der Nähe bist — kein Muss.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#128241;</span>
+            <div>
+              <h3>Neue Features testen</h3>
+              <span class="method-time">variiert</span>
+            </div>
+          </div>
+          <p>Du bekommst Zugang zu neuen App-Funktionen, bevor sie alle anderen sehen. Einfach im Alltag nutzen und uns sagen, wie es sich anfühlt. Du bist quasi unsere Beta-Testerin.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-card-header">
+            <span class="method-card-icon">&#128483;</span>
+            <div>
+              <h3>Fokusgruppen</h3>
+              <span class="method-time">60–90 Min</span>
+            </div>
+          </div>
+          <p>Eine kleine Runde von 4–6 Leuten diskutiert gemeinsam ein Thema. Remote per Video. Spannend, weil verschiedene Perspektiven aufeinandertreffen — und oft die besten Ideen entstehen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Bist du dabei?</h2>
+    <p>Sicherheit geht uns alle an. Hilf uns, SafeNow zu der App zu machen, die du dir wünschst. Die Anmeldung dauert 3 Minuten.</p>
+    <button class="btn btn-primary btn-lg" onclick="showView('register')">Jetzt dabei sein</button>
+  </section>
+
+  <footer class="footer">
+    &copy; 2026 SafeNow GmbH &middot; <a href="#" style="color:var(--accent-blue);text-decoration:none;">Datenschutz</a> &middot; <a href="#" style="color:var(--accent-blue);text-decoration:none;">Impressum</a>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     REGISTRATION FORM
+     ═══════════════════════════════════════════════ -->
+<div id="view-register" class="view">
+  <div class="form-container">
+    <div class="form-header">
+      <h1>Schön, dass du dabei bist!</h1>
+      <p>Erzähl uns ein bisschen über dich — so können wir dich zu Studien einladen, die wirklich zu dir passen. Dauert nur 3 Minuten.</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step active" id="step-ind-1"><span class="step-num">1</span> Über dich</div>
+      <div class="step-line" id="step-line-1"></div>
+      <div class="step" id="step-ind-2"><span class="step-num">2</span> SafeNow</div>
+      <div class="step-line" id="step-line-2"></div>
+      <div class="step" id="step-ind-3"><span class="step-num">3</span> Methoden</div>
+    </div>
+
+    <div id="alertRegister" class="alert"></div>
+
+    <form id="registerForm" novalidate>
+
+      <!-- Step 1: Demografische Daten -->
+      <div class="form-step" id="form-step-1">
+        <div class="form-section">
+          <div class="form-section-title">Persönliche Daten</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Vorname <span class="required">*</span></label>
+              <input type="text" name="firstname" required placeholder="Dein Vorname">
+            </div>
+            <div class="form-group">
+              <label>Nachname <span class="required">*</span></label>
+              <input type="text" name="lastname" required placeholder="Dein Nachname">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>E-Mail <span class="required">*</span></label>
+            <input type="email" name="email" required placeholder="deine@email.de">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Alter</label>
+              <select name="age_group">
+                <option value="">Bitte wählen</option>
+                <option value="18-24">18–24</option>
+                <option value="25-34">25–34</option>
+                <option value="35-44">35–44</option>
+                <option value="45-54">45–54</option>
+                <option value="55-64">55–64</option>
+                <option value="65+">65+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Geschlecht</label>
+              <select name="gender">
+                <option value="">Bitte wählen</option>
+                <option value="weiblich">Weiblich</option>
+                <option value="maennlich">Männlich</option>
+                <option value="divers">Divers</option>
+                <option value="keine_angabe">Keine Angabe</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>PLZ / Wohnort <span class="required">*</span></label>
+              <input type="text" name="location" required placeholder="z.B. 80331 München">
+            </div>
+            <div class="form-group">
+              <label>Beruf</label>
+              <input type="text" name="profession" placeholder="z.B. Studentin, Pflegekraft">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Herkunft</div>
+          <div class="form-group">
+            <label>Wie bist du auf das Lead User Panel aufmerksam geworden?</label>
+            <select name="referral_source">
+              <option value="">Bitte wählen</option>
+              <option value="friends_family">Friends & Family</option>
+              <option value="social_media">Social Media</option>
+              <option value="safenow_app">SafeNow App</option>
+              <option value="website">SafeNow Website</option>
+              <option value="newsletter">Newsletter</option>
+              <option value="empfehlung">Persönliche Empfehlung</option>
+              <option value="sonstiges">Sonstiges</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <div></div>
+          <button type="button" class="btn btn-primary" onclick="nextStep(2)">Weiter &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 2: SafeNow-Nutzung & Sicherheitskontext -->
+      <div class="form-step" id="form-step-2" style="display:none;">
+        <div class="form-section">
+          <div class="form-section-title">Du &amp; SafeNow</div>
+
+          <div class="form-group">
+            <label>Nutzt du SafeNow bereits? <span class="required">*</span></label>
+            <div class="check-group">
+              <div class="check-item">
+                <input type="radio" name="uses_safenow" id="sn-yes" value="ja">
+                <label for="sn-yes">Ja</label>
+              </div>
+              <div class="check-item">
+                <input type="radio" name="uses_safenow" id="sn-no" value="nein">
+                <label for="sn-no">Nein</label>
+              </div>
+              <div class="check-item">
+                <input type="radio" name="uses_safenow" id="sn-past" value="frueher">
+                <label for="sn-past">Früher mal</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="safenow-details" style="display:none;">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Seit wann nutzt du SafeNow?</label>
+                <select name="safenow_since">
+                  <option value="">Bitte wählen</option>
+                  <option value="< 3 Monate">Weniger als 3 Monate</option>
+                  <option value="3-6 Monate">3–6 Monate</option>
+                  <option value="6-12 Monate">6–12 Monate</option>
+                  <option value="> 1 Jahr">Über 1 Jahr</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Wie häufig?</label>
+                <select name="safenow_frequency">
+                  <option value="">Bitte wählen</option>
+                  <option value="taeglich">Täglich</option>
+                  <option value="woechentlich">Wöchentlich</option>
+                  <option value="monatlich">Monatlich</option>
+                  <option value="selten">Selten</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Welches Gerät?</label>
+              <div class="check-group">
+                <div class="check-item">
+                  <input type="checkbox" name="device" id="dev-ios" value="ios">
+                  <label for="dev-ios">&#63743; iOS</label>
+                </div>
+                <div class="check-item">
+                  <input type="checkbox" name="device" id="dev-android" value="android">
+                  <label for="dev-android">&#129302; Android</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Welche Features nutzt du am meisten?</label>
+              <textarea name="features_used" placeholder="z.B. Alarm, Begleitung, Community..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Dein Alltag &amp; Sicherheit</div>
+
+          <div class="form-group">
+            <label>Lebenssituation (Mehrfachauswahl möglich)</label>
+            <div class="check-group">
+              <div class="check-item">
+                <input type="checkbox" name="life_situation" id="ls-alone" value="alleinlebend">
+                <label for="ls-alone">Alleinlebend</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="life_situation" id="ls-kids" value="kinder">
+                <label for="ls-kids">Mit Kindern</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="life_situation" id="ls-commuter" value="pendler">
+                <label for="ls-commuter">Pendler:in</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="life_situation" id="ls-student" value="student">
+                <label for="ls-student">Student:in</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Wie sicher fühlst du dich im Alltag?</label>
+            <select name="safety_feeling">
+              <option value="">Bitte wählen</option>
+              <option value="sehr_sicher">Sehr sicher</option>
+              <option value="eher_sicher">Eher sicher</option>
+              <option value="teils_teils">Teils/teils</option>
+              <option value="eher_unsicher">Eher unsicher</option>
+              <option value="sehr_unsicher">Sehr unsicher</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Gibt es bestimmte Situationen, in denen du dich unsicher fühlst?</label>
+            <textarea name="safety_situations" placeholder="z.B. nachts alleine unterwegs, im ÖPNV, beim Joggen..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn btn-outline" onclick="prevStep(1)">&larr; Zurück</button>
+          <button type="button" class="btn btn-primary" onclick="nextStep(3)">Weiter &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Research-Methoden & Abschluss -->
+      <div class="form-step" id="form-step-3" style="display:none;">
+        <div class="form-section">
+          <div class="form-section-title">Wie willst du mitmachen?</div>
+
+          <div class="form-group">
+            <label>Was klingt gut für dich? <span class="required">*</span></label>
+            <p class="hint">Wähle alles, worauf du Lust hättest — du kannst das später jederzeit ändern.</p>
+            <div class="check-group" style="margin-top:8px;">
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-survey" value="umfragen">
+                <label for="m-survey">&#128221; Online-Umfragen</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-unmod" value="unmoderiert">
+                <label for="m-unmod">&#128187; Unmoderierte Tests</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-mod" value="moderiert">
+                <label for="m-mod">&#127908; Moderierte Interviews</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-inhouse" value="inhouse_muenchen">
+                <label for="m-inhouse">&#127970; Vor Ort in München</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-proto" value="prototypen">
+                <label for="m-proto">&#128241; App-Prototypen testen</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="methods" id="m-focus" value="fokusgruppen">
+                <label for="m-focus">&#128483; Fokusgruppen</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Wie viel Zeit pro Monat könntest du investieren?</label>
+            <select name="time_commitment">
+              <option value="">Bitte wählen</option>
+              <option value="15min">Bis 15 Minuten</option>
+              <option value="30min">Bis 30 Minuten</option>
+              <option value="1h">Bis 1 Stunde</option>
+              <option value="2h+">Mehr als 1 Stunde</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Bevorzugte Sprache für Studien</label>
+            <div class="check-group">
+              <div class="check-item">
+                <input type="checkbox" name="language" id="lang-de" value="deutsch" checked>
+                <label for="lang-de">Deutsch</label>
+              </div>
+              <div class="check-item">
+                <input type="checkbox" name="language" id="lang-en" value="englisch">
+                <label for="lang-en">English</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Noch etwas, das du uns mitteilen möchtest?</label>
+            <textarea name="notes" placeholder="Anregungen, Wünsche, Hinweise..."></textarea>
+          </div>
+        </div>
+
+        <!-- Privacy & Consent -->
+        <div class="form-group">
+          <div class="check-item">
+            <input type="checkbox" name="consent" id="consent" required>
+            <label for="consent" style="font-size:13px;">Ich bin einverstanden, dass SafeNow meine Daten speichert und mich für Research-Studien kontaktiert. <span class="required">*</span></label>
+          </div>
+        </div>
+
+        <div class="privacy-note">
+          Wir behandeln deine Daten so, wie wir es uns für unsere eigenen wünschen: vertraulich und respektvoll. Deine Daten werden nur für das Panel verwendet. Du kannst sie jederzeit ändern oder komplett löschen. Mehr dazu in unserer <a href="#">Datenschutzerklärung</a>.
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn btn-outline" onclick="prevStep(2)">&larr; Zurück</button>
+          <button type="submit" class="btn btn-dark btn-lg" id="submitBtn">
+            <span class="btn-text">Ich bin dabei!</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SUCCESS VIEW
+     ═══════════════════════════════════════════════ -->
+<div id="view-success" class="view">
+  <div class="form-container" style="text-align:center;padding-top:200px;">
+    <div style="font-size:64px;margin-bottom:24px;">&#129309;</div>
+    <h1 style="font-size:36px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;">Du bist dabei!</h1>
+    <p style="color:var(--text-muted);font-size:18px;max-width:480px;margin:0 auto 16px;">Willkommen in der SafeNow Community. Wir freuen uns riesig, dass du mitmachst. Zusammen machen wir SafeNow zu der App, die wirklich hilft.</p>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Was passiert jetzt? Wir melden uns per E-Mail bei dir, sobald eine Studie zu deinem Profil passt. Kein Spam, versprochen.</p>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:32px;">Bestätigung geht an <strong id="confirmEmail"></strong></p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="showView('profile')">Mein Profil ansehen</button>
+      <button class="btn btn-outline" onclick="showView('landing')">Zur Startseite</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PROFILE VIEW
+     ═══════════════════════════════════════════════ -->
+<div id="view-profile" class="view">
+  <div class="form-container">
+    <div class="form-header">
+      <h1>Dein Profil</h1>
+      <p>Hier siehst du deine Daten — und kannst sie jederzeit anpassen, wenn sich was ändert.</p>
+    </div>
+
+    <div id="alertProfile" class="alert"></div>
+
+    <div id="profileContent"></div>
+
+    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="editProfile()">Profil bearbeiten</button>
+      <button class="btn btn-outline" onclick="showView('landing')">Zur Startseite</button>
+    </div>
+
+    <div class="danger-zone">
+      <h3>Du möchtest gehen?</h3>
+      <p>Schade — aber natürlich dein gutes Recht. Alle deine Daten werden unwiderruflich gelöscht.</p>
+      <button class="btn btn-danger btn-sm" onclick="deleteProfile()">Meine Daten löschen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     LOGIN VIEW (simple email lookup)
+     ═══════════════════════════════════════════════ -->
+<div id="view-login" class="view">
+  <div class="form-container" style="padding-top:200px;text-align:center;">
+    <h1 style="font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:8px;">Willkommen zurück!</h1>
+    <p style="color:var(--text-muted);margin-bottom:32px;">Gib deine E-Mail ein und wir zeigen dir dein Profil.</p>
+    <div style="max-width:400px;margin:0 auto;">
+      <div id="alertLogin" class="alert"></div>
+      <div class="form-group">
+        <input type="email" id="loginEmail" placeholder="deine@email.de" style="text-align:center;">
+      </div>
+      <button class="btn btn-primary" onclick="lookupProfile()" id="loginBtn" style="width:100%;">
+        <span class="btn-text">Profil laden</span>
+        <span class="spinner"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════ -->
+<script>
+// ─── Configuration ───
+const CONFIG = {
+  // Set your proxy URL here (see mailjet-proxy.js)
+  API_URL: '/api',
+  // Mailjet contact list ID for Lead User Panel
+  LIST_ID: null, // Will be set from proxy or manually
+};
+
+// ─── State ───
+let currentUser = null;
+
+// ─── View Management ───
+function showView(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + viewName).classList.add('active');
+  window.scrollTo(0, 0);
+
+  // Update nav
+  const links = document.getElementById('navLinks');
+  if (viewName === 'profile' || viewName === 'success') {
+    links.innerHTML = `
+      <button class="nav-link" onclick="showView('landing')">Startseite</button>
+      <button class="nav-link" onclick="showView('profile')">Mein Profil</button>
+      <button class="btn btn-outline btn-sm" onclick="logout()">Abmelden</button>
+    `;
+  } else {
+    links.innerHTML = `
+      <button class="nav-link" onclick="showView('landing')"><span class="nav-link-text">Startseite</span></button>
+      <button class="nav-link" onclick="showView('login')"><span class="nav-link-text">Mein Profil</span></button>
+      <button class="btn btn-primary btn-sm" onclick="showView('register')">Dabei sein</button>
+    `;
+  }
+}
+
+// ─── Multi-Step Form ───
+let currentStep = 1;
+
+function nextStep(step) {
+  // Validate current step
+  const currentFields = document.querySelectorAll(`#form-step-${currentStep} [required]`);
+  let valid = true;
+  currentFields.forEach(f => {
+    if (!f.value || (f.type === 'checkbox' && !f.checked)) {
+      f.style.borderColor = 'var(--error)';
+      valid = false;
+    } else {
+      f.style.borderColor = '';
+    }
+  });
+
+  // For step 1, validate email format
+  if (currentStep === 1) {
+    const email = document.querySelector('[name="email"]');
+    if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      email.style.borderColor = 'var(--error)';
+      valid = false;
+    }
+  }
+
+  if (!valid) {
+    showAlert('alertRegister', 'Bitte fülle alle Pflichtfelder aus.', 'error');
+    return;
+  }
+
+  hideAlert('alertRegister');
+  document.getElementById('form-step-' + currentStep).style.display = 'none';
+  document.getElementById('form-step-' + step).style.display = 'block';
+
+  // Update step indicators
+  for (let i = 1; i <= 3; i++) {
+    const ind = document.getElementById('step-ind-' + i);
+    ind.classList.remove('active', 'done');
+    if (i < step) ind.classList.add('done');
+    if (i === step) ind.classList.add('active');
+
+    if (i < 3) {
+      const line = document.getElementById('step-line-' + i);
+      line.classList.toggle('done', i < step);
+    }
+  }
+
+  currentStep = step;
+  window.scrollTo(0, 0);
+}
+
+function prevStep(step) {
+  document.getElementById('form-step-' + currentStep).style.display = 'none';
+  document.getElementById('form-step-' + step).style.display = 'block';
+
+  for (let i = 1; i <= 3; i++) {
+    const ind = document.getElementById('step-ind-' + i);
+    ind.classList.remove('active', 'done');
+    if (i < step) ind.classList.add('done');
+    if (i === step) ind.classList.add('active');
+
+    if (i < 3) {
+      const line = document.getElementById('step-line-' + i);
+      line.classList.toggle('done', i < step);
+    }
+  }
+
+  currentStep = step;
+  window.scrollTo(0, 0);
+}
+
+// ─── SafeNow Usage Toggle ───
+document.querySelectorAll('[name="uses_safenow"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('safenow-details').style.display =
+      (this.value === 'ja' || this.value === 'frueher') ? 'block' : 'none';
+  });
+});
+
+// ─── Form Submission ───
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Validate consent
+  if (!document.getElementById('consent').checked) {
+    showAlert('alertRegister', 'Bitte stimme der Datenschutzerklärung zu.', 'error');
+    return;
+  }
+
+  // Validate at least one method selected
+  const methods = document.querySelectorAll('[name="methods"]:checked');
+  if (methods.length === 0) {
+    showAlert('alertRegister', 'Bitte wähle mindestens eine Research-Methode.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+
+  // Collect form data
+  const formData = collectFormData();
+
+  try {
+    const response = await fetch(CONFIG.API_URL + '/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Registrierung fehlgeschlagen');
+    }
+
+    const result = await response.json();
+    currentUser = formData;
+    currentUser.id = result.contactId;
+
+    // Store email in localStorage for easy re-login
+    localStorage.setItem('lup_email', formData.email);
+
+    document.getElementById('confirmEmail').textContent = formData.email;
+    showView('success');
+  } catch (err) {
+    showAlert('alertRegister', err.message || 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut.', 'error');
+  } finally {
+    btn.classList.remove('loading');
+  }
+});
+
+function collectFormData() {
+  const form = document.getElementById('registerForm');
+  const data = {};
+
+  // Simple fields
+  ['firstname', 'lastname', 'email', 'age_group', 'gender', 'location',
+   'profession', 'referral_source', 'uses_safenow', 'safenow_since',
+   'safenow_frequency', 'features_used', 'safety_feeling',
+   'safety_situations', 'time_commitment', 'notes'].forEach(name => {
+    const el = form.querySelector(`[name="${name}"]`);
+    if (el) {
+      if (el.type === 'radio') {
+        const checked = form.querySelector(`[name="${name}"]:checked`);
+        data[name] = checked ? checked.value : '';
+      } else {
+        data[name] = el.value;
+      }
+    }
+  });
+
+  // Checkbox groups
+  ['device', 'life_situation', 'methods', 'language'].forEach(name => {
+    const checked = form.querySelectorAll(`[name="${name}"]:checked`);
+    data[name] = Array.from(checked).map(c => c.value).join(',');
+  });
+
+  return data;
+}
+
+// ─── Profile Lookup ───
+async function lookupProfile() {
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) {
+    showAlert('alertLogin', 'Bitte gib deine E-Mail-Adresse ein.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('loginBtn');
+  btn.classList.add('loading');
+
+  try {
+    const response = await fetch(CONFIG.API_URL + '/profile?email=' + encodeURIComponent(email));
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Kein Profil mit dieser E-Mail gefunden. Möchtest du dich anmelden?');
+      }
+      throw new Error('Profil konnte nicht geladen werden.');
+    }
+
+    currentUser = await response.json();
+    localStorage.setItem('lup_email', email);
+    renderProfile();
+    showView('profile');
+  } catch (err) {
+    showAlert('alertLogin', err.message, 'error');
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+// ─── Profile Rendering ───
+function renderProfile() {
+  if (!currentUser) return;
+
+  const labels = {
+    firstname: 'Vorname', lastname: 'Nachname', email: 'E-Mail',
+    age_group: 'Altersgruppe', gender: 'Geschlecht', location: 'Wohnort',
+    profession: 'Beruf', referral_source: 'Quelle',
+    uses_safenow: 'Nutzt SafeNow', safenow_since: 'Seit',
+    safenow_frequency: 'Häufigkeit', device: 'Gerät',
+    features_used: 'Genutzte Features',
+    life_situation: 'Lebenssituation', safety_feeling: 'Sicherheitsgefühl',
+    safety_situations: 'Unsichere Situationen',
+    methods: 'Research-Methoden', time_commitment: 'Zeitbudget/Monat',
+    language: 'Sprache', notes: 'Anmerkungen',
+  };
+
+  const sections = {
+    'Persönliche Daten': ['firstname', 'lastname', 'email', 'age_group', 'gender', 'location', 'profession', 'referral_source'],
+    'SafeNow & Sicherheit': ['uses_safenow', 'safenow_since', 'safenow_frequency', 'device', 'features_used', 'life_situation', 'safety_feeling', 'safety_situations'],
+    'Research-Präferenzen': ['methods', 'time_commitment', 'language', 'notes'],
+  };
+
+  const tagFields = ['methods', 'device', 'life_situation', 'language'];
+
+  let html = '';
+  for (const [section, fields] of Object.entries(sections)) {
+    html += `<div class="profile-card"><h3>${section}</h3>`;
+    for (const field of fields) {
+      const value = currentUser[field];
+      if (!value) continue;
+
+      let display;
+      if (tagFields.includes(field)) {
+        display = `<div class="profile-tags">${value.split(',').map(v => `<span class="tag">${v.trim()}</span>`).join('')}</div>`;
+      } else {
+        display = `<span class="value">${value}</span>`;
+      }
+      html += `<div class="profile-field"><span class="label">${labels[field] || field}</span>${display}</div>`;
+    }
+    html += '</div>';
+  }
+
+  document.getElementById('profileContent').innerHTML = html;
+}
+
+// ─── Edit Profile ───
+function editProfile() {
+  if (!currentUser) return;
+
+  // Populate form with current data
+  const form = document.getElementById('registerForm');
+
+  ['firstname', 'lastname', 'email', 'age_group', 'gender', 'location',
+   'profession', 'referral_source', 'safenow_since',
+   'safenow_frequency', 'features_used', 'safety_feeling',
+   'safety_situations', 'time_commitment', 'notes'].forEach(name => {
+    const el = form.querySelector(`[name="${name}"]`);
+    if (el && currentUser[name]) el.value = currentUser[name];
+  });
+
+  // Radio buttons
+  if (currentUser.uses_safenow) {
+    const radio = form.querySelector(`[name="uses_safenow"][value="${currentUser.uses_safenow}"]`);
+    if (radio) {
+      radio.checked = true;
+      radio.dispatchEvent(new Event('change'));
+    }
+  }
+
+  // Checkboxes
+  ['device', 'life_situation', 'methods', 'language'].forEach(name => {
+    if (!currentUser[name]) return;
+    const values = currentUser[name].split(',');
+    form.querySelectorAll(`[name="${name}"]`).forEach(cb => {
+      cb.checked = values.includes(cb.value);
+    });
+  });
+
+  document.getElementById('consent').checked = true;
+
+  // Reset to step 1
+  currentStep = 1;
+  document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+  document.getElementById('form-step-1').style.display = 'block';
+
+  for (let i = 1; i <= 3; i++) {
+    const ind = document.getElementById('step-ind-' + i);
+    ind.classList.remove('active', 'done');
+    if (i === 1) ind.classList.add('active');
+    if (i < 3) document.getElementById('step-line-' + i).classList.remove('done');
+  }
+
+  showView('register');
+}
+
+// ─── Delete Profile ───
+async function deleteProfile() {
+  if (!currentUser || !currentUser.email) return;
+
+  if (!confirm('Bist du sicher, dass du alle deine Daten unwiderruflich löschen möchtest?')) return;
+
+  try {
+    const response = await fetch(CONFIG.API_URL + '/profile?email=' + encodeURIComponent(currentUser.email), {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) throw new Error('Löschen fehlgeschlagen');
+
+    currentUser = null;
+    localStorage.removeItem('lup_email');
+    showView('landing');
+    // Simple feedback
+    alert('Deine Daten wurden gelöscht. Danke für deine Teilnahme!');
+  } catch (err) {
+    showAlert('alertProfile', err.message, 'error');
+  }
+}
+
+// ─── Logout ───
+function logout() {
+  currentUser = null;
+  showView('landing');
+}
+
+// ─── Alerts ───
+function showAlert(id, message, type) {
+  const el = document.getElementById(id);
+  el.className = `alert alert-${type} show`;
+  el.innerHTML = (type === 'error' ? '&#9888;' : '&#10003;') + ' ' + message;
+}
+
+function hideAlert(id) {
+  document.getElementById(id).className = 'alert';
+}
+
+// ─── Auto-login on load ───
+window.addEventListener('DOMContentLoaded', () => {
+  // Check for hash navigation
+  const hash = window.location.hash.replace('#', '');
+  if (['register', 'login', 'profile'].includes(hash)) {
+    showView(hash);
+  }
+});
+</script>
+
+</body>
+</html>
