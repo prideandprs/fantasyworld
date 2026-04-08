@@ -693,37 +693,58 @@ select {
   letter-spacing: 0.5px; margin-top: 4px;
 }
 
-/* ─── Tag Picker ─── */
-.tag-picker-selected { display: flex; flex-wrap: wrap; gap: 8px; min-height: 20px; margin-bottom: 4px; }
-.tag-picker-selected:empty { display: none; }
-.tag-chip {
+/* ─── Life Situation Chips ─── */
+.ls-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.ls-chip {
+  padding: 8px 16px; border-radius: 20px;
+  font-size: 14px; font-family: inherit; font-weight: 500;
+  background: var(--bg-secondary); color: var(--text-secondary);
+  border: 1.5px solid transparent; cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ls-chip:hover { border-color: rgba(0,0,0,0.15); }
+.ls-chip.selected {
+  background: rgba(8,105,216,0.08); color: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+.ls-more-chip { display: none; }
+.ls-more-chip.visible { display: inline-flex; }
+.ls-show-more {
+  margin-top: 8px; background: none; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--accent-blue); cursor: pointer; padding: 4px 0;
+}
+.ls-show-more:hover { text-decoration: underline; }
+
+/* ─── Method Info Panel ─── */
+.method-info-btn-all {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px; background: rgba(8,105,216,0.08);
-  border: 1.5px solid var(--accent-blue); border-radius: 20px;
-  font-size: 13px; font-weight: 500; color: var(--accent-blue);
+  margin-top: 10px; background: none; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--accent-blue); cursor: pointer; padding: 4px 0;
 }
-.tag-chip .tag-remove { cursor: pointer; font-size: 16px; line-height: 1; opacity: 0.7; }
-.tag-chip .tag-remove:hover { opacity: 1; }
-.tag-picker-dropdown {
-  margin-top: 8px; border: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 12px; max-height: 220px; overflow-y: auto; background: #fff;
+.method-info-btn-all:hover { text-decoration: underline; }
+.method-info-btn-all span {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(8,105,216,0.1); font-size: 11px; font-weight: 700;
+  color: var(--accent-blue);
 }
-.tag-picker-search {
-  width: 100%; padding: 12px 16px; border: none;
-  border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 14px;
-  outline: none; border-radius: 12px 12px 0 0; box-sizing: border-box;
+.method-info-panel {
+  display: none; margin-top: 12px;
+  background: var(--bg-secondary); border-radius: 12px;
+  padding: 16px 20px;
 }
-.tag-picker-option {
-  padding: 10px 16px; font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
+.method-info-panel.show { display: block; }
+.method-info-item {
+  padding: 8px 0; font-size: 13px; line-height: 1.5;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-.tag-picker-option:hover { background: var(--bg-secondary); }
-.tag-picker-option.selected { color: var(--accent-blue); font-weight: 600; }
-.tag-picker-option.selected::before { content: '\2713'; }
-.tag-picker-group {
-  padding: 8px 16px 4px; font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);
-}
+.method-info-item:last-child { border-bottom: none; }
+.method-info-item strong { color: var(--text-primary); font-weight: 600; }
 
 /* ─── Form Row ─── */
 .form-row {
@@ -1272,8 +1293,8 @@ select {
 
           <div class="form-row">
             <div class="form-group">
-              <label>Alter</label>
-              <select name="age_group">
+              <label>Alter <span class="required">*</span></label>
+              <select name="age_group" required>
                 <option value="">Bitte wählen</option>
                 <option value="18-24">18–24</option>
                 <option value="25-34">25–34</option>
@@ -1379,7 +1400,7 @@ select {
             </div>
 
             <div class="form-group">
-              <label>Welches Gerät?</label>
+              <label>Welches Gerät? <span class="required">*</span></label>
               <div class="check-group">
                 <div class="check-item">
                   <input type="checkbox" name="device" id="dev-ios" value="ios">
@@ -1404,34 +1425,26 @@ select {
 
           <div class="form-group">
             <label>Lebenssituation (Mehrfachauswahl möglich)</label>
-            <div class="tag-picker-wrap">
-              <div class="tag-picker-selected" id="ls-selected"></div>
-              <div class="tag-picker-dropdown">
-                <input type="text" class="tag-picker-search" placeholder="Suchen..." oninput="filterLifeTags(this.value)">
-                <div id="ls-options">
-                  <div class="tag-picker-group">Wohnsituation</div>
-                  <div class="tag-picker-option" data-value="alleinlebend" onclick="toggleLifeTag(this)">Alleinlebend</div>
-                  <div class="tag-picker-option" data-value="partnerschaft" onclick="toggleLifeTag(this)">In Partnerschaft / WG</div>
-                  <div class="tag-picker-option" data-value="kinder" onclick="toggleLifeTag(this)">Mit Kindern</div>
-                  <div class="tag-picker-group">Mobilität &amp; Alltag</div>
-                  <div class="tag-picker-option" data-value="pendler" onclick="toggleLifeTag(this)">Pendler:in</div>
-                  <div class="tag-picker-option" data-value="nachtleben" onclick="toggleLifeTag(this)">Abends/nachts unterwegs</div>
-                  <div class="tag-picker-option" data-value="reisen" onclick="toggleLifeTag(this)">Viel auf Reisen</div>
-                  <div class="tag-picker-option" data-value="sport_outdoor" onclick="toggleLifeTag(this)">Sport / Outdoor</div>
-                  <div class="tag-picker-option" data-value="haustier" onclick="toggleLifeTag(this)">Mit Haustier</div>
-                  <div class="tag-picker-group">Lebensphase</div>
-                  <div class="tag-picker-option" data-value="student" onclick="toggleLifeTag(this)">Student:in</div>
-                  <div class="tag-picker-option" data-value="schichtdienst" onclick="toggleLifeTag(this)">Schichtdienst</div>
-                  <div class="tag-picker-option" data-value="ruhestand" onclick="toggleLifeTag(this)">Im Ruhestand</div>
-                  <div class="tag-picker-group">Gesundheit &amp; Zugänglichkeit</div>
-                  <div class="tag-picker-option" data-value="mobilitaetseinschraenkung" onclick="toggleLifeTag(this)">Mobilitätseinschränkung</div>
-                  <div class="tag-picker-option" data-value="seheinschraenkung" onclick="toggleLifeTag(this)">Seheinschränkung</div>
-                  <div class="tag-picker-option" data-value="hoereinschraenkung" onclick="toggleLifeTag(this)">Höreinschränkung</div>
-                  <div class="tag-picker-option" data-value="chronische_erkrankung" onclick="toggleLifeTag(this)">Chronische Erkrankung</div>
-                  <div class="tag-picker-option" data-value="psychische_belastung" onclick="toggleLifeTag(this)">Psychische Belastung</div>
-                </div>
-              </div>
+            <div class="ls-chips" id="ls-chips">
+              <button type="button" class="ls-chip" data-value="alleinlebend" onclick="toggleChip(this)">Alleinlebend</button>
+              <button type="button" class="ls-chip" data-value="partnerschaft" onclick="toggleChip(this)">In Partnerschaft / WG</button>
+              <button type="button" class="ls-chip" data-value="pendler" onclick="toggleChip(this)">Pendler:in</button>
+              <button type="button" class="ls-chip" data-value="student" onclick="toggleChip(this)">Student:in</button>
+              <button type="button" class="ls-chip" data-value="nachtleben" onclick="toggleChip(this)">Abends/nachts unterwegs</button>
+              <button type="button" class="ls-chip" data-value="kinder" onclick="toggleChip(this)">Mit Kindern</button>
+              <!-- Mehr-Optionen, initial versteckt -->
+              <button type="button" class="ls-chip ls-more-chip" data-value="reisen" onclick="toggleChip(this)">Viel auf Reisen</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="sport_outdoor" onclick="toggleChip(this)">Sport / Outdoor</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="haustier" onclick="toggleChip(this)">Mit Haustier</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="schichtdienst" onclick="toggleChip(this)">Schichtdienst</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="ruhestand" onclick="toggleChip(this)">Im Ruhestand</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="mobilitaetseinschraenkung" onclick="toggleChip(this)">Mobilitätseinschränkung</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="seheinschraenkung" onclick="toggleChip(this)">Seheinschränkung</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="hoereinschraenkung" onclick="toggleChip(this)">Höreinschränkung</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="chronische_erkrankung" onclick="toggleChip(this)">Chronische Erkrankung</button>
+              <button type="button" class="ls-chip ls-more-chip" data-value="psychische_belastung" onclick="toggleChip(this)">Psychische Belastung</button>
             </div>
+            <button type="button" class="ls-show-more" id="ls-show-more" onclick="toggleMoreChips()">Mehr anzeigen ▾</button>
             <input type="text" name="life_situation_other" placeholder="Was noch? (optional)" style="margin-top:12px;">
           </div>
 
@@ -1479,7 +1492,7 @@ select {
               </div>
               <div class="check-item">
                 <input type="checkbox" name="methods" id="m-mod" value="moderiert">
-                <label for="m-mod">&#127908; Moderierte Interviews</label>
+                <label for="m-mod">&#127908; Persönliche Gespräche</label>
               </div>
               <div class="check-item">
                 <input type="checkbox" name="methods" id="m-inhouse" value="inhouse_muenchen">
@@ -1487,12 +1500,21 @@ select {
               </div>
               <div class="check-item">
                 <input type="checkbox" name="methods" id="m-proto" value="prototypen">
-                <label for="m-proto">&#128241; App-Prototypen testen</label>
+                <label for="m-proto">&#128241; Neue Features testen</label>
               </div>
               <div class="check-item">
                 <input type="checkbox" name="methods" id="m-focus" value="fokusgruppen">
                 <label for="m-focus">&#128483; Fokusgruppen</label>
               </div>
+            </div>
+            <button type="button" class="method-info-btn-all" onclick="toggleMethodInfo()">Was bedeutet das? <span>?</span></button>
+            <div class="method-info-panel" id="methodInfoPanel">
+              <div class="method-info-item"><strong>&#128221; Online-Umfragen</strong> (5–10 Min)<br>Ein kurzer Fragebogen, wann und wo es dir passt. Am Handy oder Laptop.</div>
+              <div class="method-info-item"><strong>&#128187; Unmoderierte Tests</strong> (10–20 Min)<br>Du bekommst einen Prototyp und probierst ihn in deinem Tempo aus. Niemand schaut zu.</div>
+              <div class="method-info-item"><strong>&#127908; Persönliche Gespräche</strong> (30–45 Min)<br>Ein lockeres Gespräch per Videocall. Du erzählst, wir hören zu.</div>
+              <div class="method-info-item"><strong>&#127970; Vor Ort in München</strong> (45–90 Min)<br>Teste Features bei uns im Büro, lerne das Team kennen und tausch dich bei Kaffee aus.</div>
+              <div class="method-info-item"><strong>&#128241; Neue Features testen</strong> (variiert)<br>Du bekommst Zugang zu neuen Funktionen, bevor sie live gehen. Einfach im Alltag nutzen und Feedback geben.</div>
+              <div class="method-info-item"><strong>&#128483; Fokusgruppen</strong> (60–90 Min)<br>Eine kleine Runde von 4–6 Leuten diskutiert gemeinsam ein Thema per Video.</div>
             </div>
           </div>
 
@@ -1674,6 +1696,14 @@ function nextStep(step) {
     }
   });
 
+  // For step 2, validate device checkbox group
+  if (currentStep === 2) {
+    const devices = document.querySelectorAll('[name="device"]:checked');
+    if (devices.length === 0) {
+      missingFields.push('Welches Gerät?');
+    }
+  }
+
   if (missingFields.length > 0) {
     errors.push('Bitte fülle aus: ' + missingFields.join(', '));
   }
@@ -1733,40 +1763,27 @@ function prevStep(step) {
   window.scrollTo(0, 0);
 }
 
-// ─── Life Situation Tag Picker ───
-function toggleLifeTag(el) {
+// ─── Life Situation Chips ───
+function toggleChip(el) {
   el.classList.toggle('selected');
-  updateLifeTags();
 }
 
-function removeLifeTag(val) {
-  const opt = document.querySelector('#ls-options .tag-picker-option[data-value="' + val + '"]');
-  if (opt) opt.classList.remove('selected');
-  updateLifeTags();
-}
-
-function updateLifeTags() {
-  const selected = document.querySelectorAll('#ls-options .tag-picker-option.selected');
-  const container = document.getElementById('ls-selected');
-  container.innerHTML = Array.from(selected).map(s =>
-    '<span class="tag-chip">' + s.textContent + '<span class="tag-remove" onclick="removeLifeTag(\'' + s.dataset.value + '\')">&times;</span></span>'
-  ).join('');
-}
-
-function filterLifeTags(query) {
-  const q = query.toLowerCase();
-  document.querySelectorAll('#ls-options .tag-picker-option').forEach(o => {
-    o.style.display = o.textContent.toLowerCase().includes(q) ? '' : 'none';
+let moreChipsVisible = false;
+function toggleMoreChips() {
+  moreChipsVisible = !moreChipsVisible;
+  document.querySelectorAll('.ls-more-chip').forEach(c => {
+    c.classList.toggle('visible', moreChipsVisible);
   });
-  document.querySelectorAll('#ls-options .tag-picker-group').forEach(g => {
-    let sib = g.nextElementSibling;
-    let anyVisible = false;
-    while (sib && !sib.classList.contains('tag-picker-group')) {
-      if (sib.classList.contains('tag-picker-option') && sib.style.display !== 'none') anyVisible = true;
-      sib = sib.nextElementSibling;
-    }
-    g.style.display = anyVisible ? '' : 'none';
-  });
+  document.getElementById('ls-show-more').textContent = moreChipsVisible ? 'Weniger anzeigen ▴' : 'Mehr anzeigen ▾';
+}
+
+// ─── Method Tooltip ───
+// Method info panel toggle
+function toggleMethodInfo() {
+  const panel = document.getElementById('methodInfoPanel');
+  const btn = document.querySelector('.method-info-btn-all');
+  const isOpen = panel.classList.toggle('show');
+  btn.firstChild.textContent = isOpen ? 'Weniger anzeigen ' : 'Was bedeutet das? ';
 }
 
 // ─── SafeNow Usage Toggle ───
@@ -1867,8 +1884,8 @@ function collectFormData() {
     data[name] = Array.from(checked).map(c => c.value).join(',');
   });
 
-  // Life situation from tag picker
-  const lsSelected = document.querySelectorAll('#ls-options .tag-picker-option.selected');
+  // Life situation from chips
+  const lsSelected = document.querySelectorAll('#ls-chips .ls-chip.selected');
   data.life_situation = Array.from(lsSelected).map(s => s.dataset.value).join(',');
 
   // Append free text for life_situation
