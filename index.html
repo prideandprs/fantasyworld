@@ -123,7 +123,7 @@ body {
   text-align: center;
   padding: 120px 24px 80px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero::before {
@@ -331,51 +331,131 @@ body {
 /* ─── Promise Strip ─── */
 .promise-strip {
   padding: 0 24px;
-  margin-top: -40px;
+  margin-top: -20px;
+  margin-bottom: 60px;
   position: relative;
   z-index: 2;
 }
 
 .promise-inner {
-  max-width: 900px; margin: 0 auto;
-  display: flex; align-items: center;
-  justify-content: center;
-  gap: 24px;
-  padding: 28px 36px;
-  background: var(--bg-primary);
-  border-radius: var(--card-radius);
-  box-shadow: 0 4px 32px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  max-width: 700px; margin: 0 auto;
+  display: flex; justify-content: center;
+  gap: 32px;
   flex-wrap: wrap;
 }
 
 .promise-item {
-  display: flex; align-items: center; gap: 12px;
-  flex: 1; min-width: 200px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  min-width: 140px;
 }
 
 .promise-icon {
-  font-size: 24px; flex-shrink: 0;
+  width: 40px; height: 40px;
+  background: rgba(8,105,216,0.08);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
 }
 
 .promise-item strong {
   display: block;
-  font-size: 14px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   letter-spacing: -0.3px;
 }
 
 .promise-item span {
-  font-size: 12px; color: var(--text-muted);
+  font-size: 12px; color: var(--text-muted); line-height: 1.4;
 }
 
 .promise-divider {
-  width: 1px; height: 36px;
-  background: rgba(0,0,0,0.08);
-  flex-shrink: 0;
+  display: none;
 }
 
 @media (max-width: 700px) {
-  .promise-inner { flex-direction: column; gap: 16px; padding: 24px; }
-  .promise-divider { width: 100%; height: 1px; }
+  .promise-inner { gap: 24px; }
+}
+
+/* ─── Team Section ─── */
+.team-section {
+  padding: 80px 24px;
+}
+
+.team-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.team-cards {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.team-card {
+  flex: 1;
+  min-width: 260px;
+  max-width: 320px;
+  background: var(--bg-secondary);
+  border-radius: var(--card-radius);
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.team-photo-wrap {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  background: rgba(8,105,216,0.08);
+}
+
+.team-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.team-initials {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(8,105,216,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 16px;
+}
+
+.team-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 2px;
+}
+
+.team-card .team-role {
+  font-size: 13px;
+  color: var(--accent-blue);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.team-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .team-cards { flex-direction: column; align-items: center; }
 }
 
 /* ─── How It Works ─── */
@@ -821,8 +901,8 @@ select {
   <!-- Hero -->
   <section class="hero">
     <div class="hero-badge">Werde Teil der SafeNow Community</div>
-    <h1>Sicherheit beginnt mit <span class="accent">dir</span></h1>
-    <p>Du weißt am besten, was du brauchst, um dich sicher zu fühlen. Deshalb bauen wir SafeNow nicht alleine — sondern mit dir. Werde Teil unserer Community und gestalte mit uns die App, die Millionen Menschen schützt.</p>
+    <h1>Sicherheit, die zu <span class="accent">dir</span> passt</h1>
+    <p>Niemand weiß besser als du, was Sicherheit im Alltag bedeutet. Deine Erfahrung hilft uns, Sicherheit zu bauen, die wirklich zu dir passt.</p>
     <div class="hero-cta">
       <button class="btn btn-primary btn-lg" onclick="showView('register')">Dabei sein</button>
       <a href="#why" class="btn btn-outline btn-lg">Warum mitmachen?</a>
@@ -833,27 +913,19 @@ select {
   <section class="promise-strip">
     <div class="promise-inner">
       <div class="promise-item">
-        <span class="promise-icon">&#9203;</span>
-        <div>
-          <strong>3 Minuten Anmeldung</strong>
-          <span>Kein Abo. Kein Kleingedrucktes.</span>
-        </div>
+        <span class="promise-icon">&#9201;</span>
+        <strong>3 Min Anmeldung</strong>
+        <span>Schnell und unkompliziert</span>
       </div>
-      <div class="promise-divider"></div>
       <div class="promise-item">
         <span class="promise-icon">&#128588;</span>
-        <div>
-          <strong>Du entscheidest immer</strong>
-          <span>Jede Einladung ist freiwillig. Immer.</span>
-        </div>
+        <strong>Du entscheidest</strong>
+        <span>Jede Einladung ist freiwillig</span>
       </div>
-      <div class="promise-divider"></div>
       <div class="promise-item">
         <span class="promise-icon">&#128065;</span>
-        <div>
-          <strong>Du siehst, was passiert</strong>
-          <span>Wir zeigen dir, was aus eurem Feedback wird.</span>
-        </div>
+        <strong>Feedback wirkt</strong>
+        <span>Du siehst, was sich ändert</span>
       </div>
     </div>
   </section>
@@ -861,23 +933,23 @@ select {
   <!-- Why / Emotional Features -->
   <section class="features" id="why">
     <div class="features-inner">
-      <div class="section-label">Warum das wichtig ist</div>
+      <div class="section-label">Warum mitmachen</div>
       <h2 class="section-title">SafeNow gehört uns allen. Dir auch.</h2>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">&#128170;</div>
-          <h3>Deine Erfahrung zählt</h3>
-          <p>Niemand kennt deinen Alltag besser als du. Ob du nachts alleine nach Hause gehst oder deine Kinder zur Schule schickst — dein Wissen macht SafeNow besser. Nicht irgendwann. Jetzt.</p>
+          <h3>Dein Alltag ist der Ausgangspunkt</h3>
+          <p>Nachts alleine nach Hause, mit den Kids zur Schule, im ÖPNV: Du erlebst jeden Tag, wo Sicherheit anfängt und wo sie aufhört.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">&#129309;</div>
-          <h3>Gemeinsam, nicht einsam</h3>
-          <p>Du bist nicht "Testperson Nr. 47". Du bist Teil einer Community, die zusammen an etwas Wichtigem arbeitet. Wir teilen Updates, feiern Erfolge und sagen ehrlich, wenn etwas nicht klappt.</p>
+          <h3>Kein Testlabor, eine Community</h3>
+          <p>Du bist Teil einer Gruppe, die zusammen an etwas Wichtigem arbeitet.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">&#9889;</div>
           <h3>Dein Einfluss ist real</h3>
-          <p>Kein Feedback-Friedhof. Was du uns sagst, landet nicht in einer Schublade. Du siehst in der App, was sich durch euer Feedback verändert hat. Versprochen.</p>
+          <p>Kein Feedback-Friedhof. Was du uns sagst, verändert die App. Und du kannst nachvollziehen, was daraus geworden ist.</p>
         </div>
       </div>
     </div>
@@ -887,22 +959,22 @@ select {
   <section class="how-it-works">
     <div class="how-inner">
       <div class="section-label">So läuft's</div>
-      <h2 class="section-title">Mitmachen ist einfach — und du entscheidest immer selbst</h2>
+      <h2 class="section-title">Drei Schritte. Mehr nicht.</h2>
 
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">1</div>
           <div class="how-step-content">
             <h3>Melde dich an</h3>
-            <p>3 Minuten, ein paar Fragen zu dir und wie du SafeNow nutzt. Fertig. Kein Abo, kein Kleingedrucktes.</p>
+            <p>3 Minuten, ein paar Fragen zu dir und wie du SafeNow nutzt. Das war's.</p>
           </div>
           <div class="how-step-line"></div>
         </div>
         <div class="how-step">
           <div class="how-step-num">2</div>
           <div class="how-step-content">
-            <h3>Wir melden uns bei dir</h3>
-            <p>Wenn eine Studie zu deinem Profil passt, bekommst du eine Einladung per E-Mail. Kurze Umfrage, Prototyp testen oder Interview — du sagst uns vorher, was für dich passt.</p>
+            <h3>Du bekommst eine Einladung</h3>
+            <p>Wenn eine Studie zu deinem Profil passt, schreiben wir dir eine E-Mail. Kurze Umfrage, Prototyp testen oder Interview, du sagst uns vorher, was für dich passt.</p>
           </div>
           <div class="how-step-line"></div>
         </div>
@@ -910,9 +982,39 @@ select {
           <div class="how-step-num">3</div>
           <div class="how-step-content">
             <h3>Dein Feedback wirkt</h3>
-            <p>Was du uns sagst, fließt direkt in die Produktentwicklung. Und du siehst in der App, was daraus wird. Das ist kein Marketing — das ist unser Versprechen.</p>
+            <p>Was du uns sagst, verändert die App. Und du siehst, was daraus geworden ist.</p>
           </div>
           <div class="how-step-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section">
+    <div class="team-inner">
+      <div class="section-label">Dein Gegenüber</div>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Die Menschen hinter den Gesprächen</h2>
+      <div class="team-cards">
+        <div class="team-card">
+          <div class="team-photo-wrap">
+            <img src="images/pazi.jpeg" alt="Pazi" class="team-photo"
+                 onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='inline-flex'">
+          </div>
+          <span class="team-initials" style="display:none">P</span>
+          <h3>Pazi</h3>
+          <div class="team-role">UX Design</div>
+          <p>Ich will eine App gestalten, bei der man spürt, dass jemand mitgedacht hat. Nicht kompliziert, nicht laut. Einfach da, wenn du sie brauchst. Dafür muss ich verstehen, wie sich dein Alltag wirklich anfühlt.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-photo-wrap">
+            <img src="images/julia.jpg" alt="Julia" class="team-photo" style="object-position: center 85%; transform: scale(1.5); transform-origin: center 85%"
+                 onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='inline-flex'">
+          </div>
+          <span class="team-initials" style="display:none">J</span>
+          <h3>Julia</h3>
+          <div class="team-role">Produktmanagement</div>
+          <p>Ob unterwegs mit Freundinnen oder auf Reisen, wir passen aufeinander auf. Das ist für mich SafeNow: füreinander da sein, immer. Ich möchte, dass die App genau dieses Gefühl für euch alle schafft.</p>
         </div>
       </div>
     </div>
@@ -922,8 +1024,8 @@ select {
   <section class="methods">
     <div class="methods-inner">
       <div class="section-label">Dein Tempo, dein Weg</div>
-      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Du entscheidest, wie du mitmachst</h2>
-      <p style="color:var(--text-muted);max-width:540px;margin:0 auto 40px;font-size:15px;">Nicht jeder hat Zeit für ein Interview — und das ist völlig okay. Schon eine kurze Umfrage hilft uns weiter. Hier sind die Möglichkeiten:</p>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Von 5 Minuten bis Kaffee im Büro</h2>
+      <p style="color:var(--text-muted);max-width:540px;margin:0 auto 40px;font-size:15px;">Jede Art der Teilnahme hilft uns weiter. Du wählst, was zu dir passt.</p>
 
       <div class="methods-grid">
         <div class="method-card">
@@ -934,7 +1036,7 @@ select {
               <span class="method-time">5–10 Min</span>
             </div>
           </div>
-          <p>Ein kurzer Fragebogen, den du ausfüllst, wann es dir passt. Am Handy oder am Laptop, vom Sofa aus. Ideal, wenn du wenig Zeit hast, aber trotzdem mitreden willst.</p>
+          <p>Ein kurzer Fragebogen, wann und wo es dir passt. Am Handy, am Laptop, vom Sofa aus. Perfekt für zwischendurch.</p>
         </div>
 
         <div class="method-card">
@@ -945,7 +1047,7 @@ select {
               <span class="method-time">10–20 Min</span>
             </div>
           </div>
-          <p>Du bekommst einen Prototyp oder eine Aufgabe und probierst sie selbst aus — ohne dass jemand zuschaut oder dich anleitet. Du machst das alleine, in deinem Tempo, von zuhause.</p>
+          <p>Du bekommst einen Prototyp und probierst ihn in deinem Tempo aus, ohne dass jemand zuschaut.</p>
         </div>
 
         <div class="method-card">
@@ -956,7 +1058,7 @@ select {
               <span class="method-time">30–45 Min</span>
             </div>
           </div>
-          <p>Ein lockeres Gespräch per Videocall mit jemandem aus unserem Team. Wir zeigen dir Ideen, du sagst uns ehrlich, was du denkst. Kein Test — einfach ein Austausch auf Augenhöhe.</p>
+          <p>Ein lockeres Gespräch per Videocall mit jemandem aus unserem Team. Du erzählst, wir hören zu. Kein Test, einfach ein ehrlicher Austausch.</p>
         </div>
 
         <div class="method-card">
@@ -967,7 +1069,7 @@ select {
               <span class="method-time">45–90 Min</span>
             </div>
           </div>
-          <p>Komm vorbei und lerne das Team kennen! Du testest neue Features direkt bei uns im Büro, wir quatschen bei Kaffee und Snacks. Nur wenn du in der Nähe bist — kein Muss.</p>
+          <p>Lerne das Team persönlich kennen, teste neue Features bei uns im Büro und tausch dich bei Kaffee mit uns aus.</p>
         </div>
 
         <div class="method-card">
@@ -978,7 +1080,7 @@ select {
               <span class="method-time">variiert</span>
             </div>
           </div>
-          <p>Du bekommst Zugang zu neuen App-Funktionen, bevor sie alle anderen sehen. Einfach im Alltag nutzen und uns sagen, wie es sich anfühlt. Du bist quasi unsere Beta-Testerin.</p>
+          <p>Du bekommst Zugang zu neuen Funktionen, bevor sie live gehen. Einfach im Alltag nutzen und uns sagen, wie es sich anfühlt.</p>
         </div>
 
         <div class="method-card">
@@ -989,7 +1091,7 @@ select {
               <span class="method-time">60–90 Min</span>
             </div>
           </div>
-          <p>Eine kleine Runde von 4–6 Leuten diskutiert gemeinsam ein Thema. Remote per Video. Spannend, weil verschiedene Perspektiven aufeinandertreffen — und oft die besten Ideen entstehen.</p>
+          <p>Eine kleine Runde von 4–6 Leuten diskutiert gemeinsam ein Thema per Video. Verschiedene Perspektiven, oft die besten Ideen.</p>
         </div>
       </div>
     </div>
@@ -998,7 +1100,7 @@ select {
   <!-- CTA -->
   <section class="cta-section">
     <h2>Bist du dabei?</h2>
-    <p>Sicherheit geht uns alle an. Hilf uns, SafeNow zu der App zu machen, die du dir wünschst. Die Anmeldung dauert 3 Minuten.</p>
+    <p>Deine Perspektive macht den Unterschied. Und die Anmeldung dauert nur 3 Minuten.</p>
     <button class="btn btn-primary btn-lg" onclick="showView('register')">Jetzt dabei sein</button>
   </section>
 
@@ -1014,7 +1116,7 @@ select {
   <div class="form-container">
     <div class="form-header">
       <h1>Schön, dass du dabei bist!</h1>
-      <p>Erzähl uns ein bisschen über dich — so können wir dich zu Studien einladen, die wirklich zu dir passen. Dauert nur 3 Minuten.</p>
+      <p>Ein paar Fragen zu dir, damit wir dich zu Studien einladen können, die wirklich zu dir passen. Dauert nur 3 Minuten.</p>
     </div>
 
     <!-- Steps -->
@@ -1327,8 +1429,8 @@ select {
   <div class="form-container" style="text-align:center;padding-top:200px;">
     <div style="font-size:64px;margin-bottom:24px;">&#129309;</div>
     <h1 style="font-size:36px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;">Du bist dabei!</h1>
-    <p style="color:var(--text-muted);font-size:18px;max-width:480px;margin:0 auto 16px;">Willkommen in der SafeNow Community. Wir freuen uns riesig, dass du mitmachst. Zusammen machen wir SafeNow zu der App, die wirklich hilft.</p>
-    <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Was passiert jetzt? Wir melden uns per E-Mail bei dir, sobald eine Studie zu deinem Profil passt. Kein Spam, versprochen.</p>
+    <p style="color:var(--text-muted);font-size:18px;max-width:480px;margin:0 auto 16px;">Willkommen in der SafeNow Community. Schön, dass du dabei bist. Zusammen machen wir SafeNow zu der App, die wirklich hilft.</p>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Was passiert jetzt? Wir schreiben dir eine E-Mail, sobald eine Studie zu deinem Profil passt.</p>
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:32px;">Bestätigung geht an <strong id="confirmEmail"></strong></p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn btn-primary" onclick="showView('profile')">Mein Profil ansehen</button>

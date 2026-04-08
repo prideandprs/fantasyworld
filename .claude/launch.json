@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lead-user-panel",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-r", "dotenv/config", "mailjet-proxy.js"],
+      "port": 3000
+    }
+  ]
+}
