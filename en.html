@@ -1862,11 +1862,14 @@ function nextStep(step) {
     }
   });
 
-  // For step 2, validate device checkbox group
+  // For step 2, validate device checkbox group only if safenow-details is visible
   if (currentStep === 2) {
-    const devices = document.querySelectorAll('[name="device"]:checked');
-    if (devices.length === 0) {
-      missingFields.push('Which device?');
+    const safenowDetails = document.getElementById('safenow-details');
+    if (safenowDetails && safenowDetails.style.display !== 'none') {
+      const devices = document.querySelectorAll('[name="device"]:checked');
+      if (devices.length === 0) {
+        missingFields.push('Which device?');
+      }
     }
   }
 
