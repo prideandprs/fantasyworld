@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════
-   SafeNow Lead User Panel — Styles
+   SafeNow Lead User Panel - Styles
    ═══════════════════════════════════════════════ */
 :root {
   --bg-primary: #ffffff;
@@ -257,7 +257,7 @@ body {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -1047,6 +1047,7 @@ select {
   .features, .methods, .cta-section { padding: 60px 20px; }
   .form-container { padding: 100px 20px 60px; }
   .nav-links .nav-link-text { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
 }
 
 /* ─── Privacy Section in Form ─── */
@@ -1189,11 +1190,11 @@ select {
     <div class="what-inner">
       <div class="section-label">Was heißt mitmachen</div>
       <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Das Lead User Panel ist eine feste Gruppe von Menschen, die SafeNow regelmäßig mitgestalten.</h2>
-      <p class="what-description">Wir laden dich zu Umfragen, Tests oder Gesprächen ein. Du entscheidest jedes Mal neu, ob und wie du mitmachst. Bei der Anmeldung wählst du einfach aus, was für dich in Frage kommt — zum Beispiel nur Umfragen oder auch Gespräche. Wir melden uns nur dafür. Kein fester Zeitplan, kein Druck.</p>
+      <p class="what-description">Wir laden dich zu Umfragen, Tests oder Gesprächen ein. Du entscheidest jedes Mal neu, ob und wie du mitmachst. Bei der Anmeldung wählst du einfach aus, was für dich in Frage kommt - zum Beispiel nur Umfragen oder auch Gespräche. Wir melden uns nur dafür. Kein fester Zeitplan, kein Druck.</p>
     </div>
   </section>
 
-  <!-- Research Methods — mit Erklärungen -->
+  <!-- Research Methods - mit Erklärungen -->
   <section class="methods">
     <div class="methods-inner">
       <div class="section-label">Dein Tempo, dein Weg</div>
@@ -1482,8 +1483,8 @@ select {
 
           <div class="form-row">
             <div class="form-group">
-              <label>PLZ / Wohnort <span class="required">*</span></label>
-              <input type="text" name="location" required placeholder="z.B. 80331 München">
+              <label>PLZ / Wohnort</label>
+              <input type="text" name="location" placeholder="z.B. 80331 München">
             </div>
             <div class="form-group">
               <label>Beruf</label>
@@ -1564,7 +1565,7 @@ select {
             </div>
 
             <div class="form-group">
-              <label>Welches Gerät? <span class="required">*</span></label>
+              <label>Auf welchem Gerät? <span class="required">*</span></label>
               <div class="check-group">
                 <div class="check-item">
                   <input type="checkbox" name="device" id="dev-ios" value="ios">
@@ -1579,7 +1580,7 @@ select {
 
             <div class="form-group">
               <label>Welche Features nutzt du am meisten?</label>
-              <textarea name="features_used" placeholder="z.B. Alarm, Begleitung, Community..."></textarea>
+              <textarea name="features_used" placeholder="z.B. Alarm, Aufmerksamkeitsmodus, ..."></textarea>
             </div>
           </div>
         </div>
@@ -1644,7 +1645,7 @@ select {
 
           <div class="form-group">
             <label>Was klingt gut für dich? <span class="required">*</span></label>
-            <p class="hint">Wähle alles, worauf du Lust hättest — du kannst das später jederzeit ändern.</p>
+            <p class="hint">Wähle alles, worauf du Lust hättest - du kannst das später jederzeit ändern.</p>
             <div class="check-group" style="margin-top:8px;">
               <div class="check-item">
                 <input type="checkbox" name="methods" id="m-survey" value="umfragen">
@@ -1764,7 +1765,7 @@ select {
   <div class="form-container">
     <div class="form-header">
       <h1>Dein Profil</h1>
-      <p>Hier siehst du deine Daten — und kannst sie jederzeit anpassen, wenn sich was ändert.</p>
+      <p>Hier siehst du deine Daten - und kannst sie jederzeit anpassen, wenn sich was ändert.</p>
     </div>
 
     <div id="alertProfile" class="alert"></div>
@@ -1778,7 +1779,7 @@ select {
 
     <div class="danger-zone">
       <h3>Du möchtest gehen?</h3>
-      <p>Schade — aber natürlich dein gutes Recht. Alle deine Daten werden unwiderruflich gelöscht.</p>
+      <p>Schade - aber natürlich dein gutes Recht. Alle deine Daten werden unwiderruflich gelöscht.</p>
       <button class="btn btn-danger btn-sm" onclick="deleteProfile()">Meine Daten löschen</button>
     </div>
   </div>
@@ -1821,10 +1822,14 @@ const CONFIG = {
 let currentUser = null;
 
 // ─── View Management ───
-function showView(viewName) {
+function showView(viewName, pushHistory) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + viewName).classList.add('active');
   window.scrollTo(0, 0);
+
+  if (pushHistory !== false) {
+    history.pushState({ view: viewName }, '', '#' + viewName);
+  }
 
   // Update nav
   const links = document.getElementById('navLinks');
@@ -1839,6 +1844,19 @@ function showView(viewName) {
       <button class="btn btn-primary btn-sm" onclick="showView('register')">Dabei sein</button>
       <a href="en.html" class="lang-toggle">EN</a>
     `;
+  }
+}
+
+window.addEventListener('popstate', function(e) {
+  const view = (e.state && e.state.view) || 'landing';
+  showView(view, false);
+});
+
+// Handle initial hash on page load
+if (window.location.hash) {
+  const initialView = window.location.hash.replace('#', '');
+  if (document.getElementById('view-' + initialView)) {
+    showView(initialView, false);
   }
 }
 
@@ -1868,7 +1886,7 @@ function nextStep(step) {
     if (safenowDetails && safenowDetails.style.display !== 'none') {
       const devices = document.querySelectorAll('[name="device"]:checked');
       if (devices.length === 0) {
-        missingFields.push('Welches Gerät?');
+        missingFields.push('Auf welchem Gerät?');
       }
     }
   }

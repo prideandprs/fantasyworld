@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════
-   SafeNow Lead User Panel — Styles
+   SafeNow Lead User Panel - Styles
    ═══════════════════════════════════════════════ */
 :root {
   --bg-primary: #ffffff;
@@ -257,7 +257,7 @@ body {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -1047,6 +1047,7 @@ select {
   .features, .methods, .cta-section { padding: 60px 20px; }
   .form-container { padding: 100px 20px 60px; }
   .nav-links .nav-link-text { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
 }
 
 /* ─── Privacy Section in Form ─── */
@@ -1189,11 +1190,11 @@ select {
     <div class="what-inner">
       <div class="section-label">What does participating mean</div>
       <h2 class="section-title" style="margin-left:auto;margin-right:auto;">The Lead User Panel is a group of people who regularly help shape SafeNow.</h2>
-      <p class="what-description">We invite you to surveys, tests, or conversations. You decide each time whether and how you want to participate. During sign-up, you simply select what works for you — for example just surveys or also conversations. We'll only reach out for those. No fixed schedule, no pressure.</p>
+      <p class="what-description">We invite you to surveys, tests, or conversations. You decide each time whether and how you want to participate. During sign-up, you simply select what works for you - for example just surveys or also conversations. We'll only reach out for those. No fixed schedule, no pressure.</p>
     </div>
   </section>
 
-  <!-- Research Methods — with explanations -->
+  <!-- Research Methods - with explanations -->
   <section class="methods">
     <div class="methods-inner">
       <div class="section-label">Your pace, your way</div>
@@ -1482,8 +1483,8 @@ select {
 
           <div class="form-row">
             <div class="form-group">
-              <label>Postal code / City <span class="required">*</span></label>
-              <input type="text" name="location" required placeholder="e.g. 80331 Munich">
+              <label>Postal code / City</label>
+              <input type="text" name="location" placeholder="e.g. 80331 Munich">
             </div>
             <div class="form-group">
               <label>Occupation</label>
@@ -1564,7 +1565,7 @@ select {
             </div>
 
             <div class="form-group">
-              <label>Which device? <span class="required">*</span></label>
+              <label>Which device do you use? <span class="required">*</span></label>
               <div class="check-group">
                 <div class="check-item">
                   <input type="checkbox" name="device" id="dev-ios" value="ios">
@@ -1579,7 +1580,7 @@ select {
 
             <div class="form-group">
               <label>Which features do you use the most?</label>
-              <textarea name="features_used" placeholder="e.g. Alarm, Companion, Community..."></textarea>
+              <textarea name="features_used" placeholder="e.g. Alarm, Attention Mode, ..."></textarea>
             </div>
           </div>
         </div>
@@ -1821,10 +1822,14 @@ const CONFIG = {
 let currentUser = null;
 
 // ─── View Management ───
-function showView(viewName) {
+function showView(viewName, pushHistory) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + viewName).classList.add('active');
   window.scrollTo(0, 0);
+
+  if (pushHistory !== false) {
+    history.pushState({ view: viewName }, '', '#' + viewName);
+  }
 
   // Update nav
   const links = document.getElementById('navLinks');
@@ -1839,6 +1844,18 @@ function showView(viewName) {
       <button class="btn btn-primary btn-sm" onclick="showView('register')">Join now</button>
       <a href="index.html" class="lang-toggle">DE</a>
     `;
+  }
+}
+
+window.addEventListener('popstate', function(e) {
+  const view = (e.state && e.state.view) || 'landing';
+  showView(view, false);
+});
+
+if (window.location.hash) {
+  const initialView = window.location.hash.replace('#', '');
+  if (document.getElementById('view-' + initialView)) {
+    showView(initialView, false);
   }
 }
 
@@ -1868,7 +1885,7 @@ function nextStep(step) {
     if (safenowDetails && safenowDetails.style.display !== 'none') {
       const devices = document.querySelectorAll('[name="device"]:checked');
       if (devices.length === 0) {
-        missingFields.push('Which device?');
+        missingFields.push('Which device do you use?');
       }
     }
   }
