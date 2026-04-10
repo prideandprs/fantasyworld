@@ -1990,29 +1990,24 @@ document.getElementById('registerForm').addEventListener('submit', async functio
   // Collect form data
   const formData = collectFormData();
 
-  // Demo mode: skip API call if no backend available
-  const isDemo = !window.location.port || window.location.hostname !== 'localhost';
-
   try {
-    if (!isDemo) {
-      const response = await fetch(CONFIG.API_URL + '/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    const response = await fetch(CONFIG.API_URL + '/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.message || 'Registrierung fehlgeschlagen');
-      }
-
-      const result = await response.json();
-      currentUser = formData;
-      currentUser.id = result.contactId;
-
-      // Store email in localStorage for easy re-login
-      localStorage.setItem('lup_email', formData.email);
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Registrierung fehlgeschlagen');
     }
+
+    const result = await response.json();
+    currentUser = formData;
+    currentUser.id = result.contactId;
+
+    // Store email in localStorage for easy re-login
+    localStorage.setItem('lup_email', formData.email);
 
     document.getElementById('confirmEmail').textContent = formData.email;
     document.getElementById('confirmName').textContent = formData.firstname || 'du';
