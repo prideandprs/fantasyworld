@@ -51,11 +51,23 @@ async function mjRequest(endpoint, method = 'GET', body = null) {
   };
   if (body) opts.body = JSON.stringify(body);
 
+  console.log(`[MJ] ${method} ${endpoint}`, body ? JSON.stringify(body).substring(0, 500) : '');
+
   const res = await fetch(`${MJ_API}${endpoint}`, opts);
-  const data = await res.json();
+  const text = await res.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error(`[MJ] Response not JSON (${res.status}):`, text.substring(0, 500));
+    throw new Error(`Mailjet returned non-JSON response: ${res.status}`);
+  }
+
+  console.log(`[MJ] Response ${res.status}:`, JSON.stringify(data).substring(0, 500));
 
   if (!res.ok) {
     const msg = data.ErrorMessage || data.StatusCode || 'Mailjet API Error';
+    console.error(`[MJ] ERROR ${res.status}:`, JSON.stringify(data));
     const err = new Error(msg);
     err.status = res.status;
     throw err;
@@ -166,8 +178,11 @@ async function ensureContactProperties() {
 app.post('/api/register', async (req, res) => {
   try {
     const data = req.body;
+    console.log('[REGISTER] Incoming request:', JSON.stringify(data).substring(0, 500));
+    console.log('[REGISTER] ENV check — MJ_LIST_ID:', MJ_LIST_ID, 'MJ_PUBLIC set:', !!MJ_PUBLIC, 'MJ_PRIVATE set:', !!MJ_PRIVATE);
 
     if (!data.email || !data.firstname || !data.lastname) {
+      console.log('[REGISTER] Missing required fields');
       return res.status(400).json({ message: 'E-Mail, Vorname und Nachname sind Pflichtfelder.' });
     }
 
@@ -218,6 +233,7 @@ app.post('/api/register', async (req, res) => {
       // Non-critical
     }
 
+    console.log('[REGISTER] Success! contactId:', contactId);
     res.json({
       success: true,
       contactId,
@@ -225,7 +241,7 @@ app.post('/api/register', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Register error:', err.message);
+    console.error('[REGISTER] ERROR:', err.message, err.status || '');
     res.status(err.status || 500).json({
       message: err.message || 'Registrierung fehlgeschlagen.',
     });
